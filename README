@@ -1,0 +1,68 @@
+==== LISARD AI base framework v0.1 ====
+
+Log Intelligent Security Aware Resilient Daemon
+
+(c) 2017 Dan Persons <dpersonsdev@gmail.com>
+
+
+==== Underlying Theories ====
+
+* AI should start with the goals of lizard-like intelligence:
+    Be aware of space
+    Stay alive
+    Leave the chessmaster/jeopardy stuff for later;
+    It will evolve on top of our platform, like in real evolution
+
+* Stereo audio and vision are necessary for spacial awareness
+    Important attributes are direction and range
+    Redundant senses help with awareness of sensory issues and conditions
+
+* Survivability is key
+    Organs should be able to operate without any part except CNS
+
+
+==== Systems (Organs) ====
+
+* Central Nervous System (CNS)
+    Receives input from senses, correlates; makes low-level decisions
+    Tries to establish range and direction of motion/sounds
+    Communicates with parts via ad-hoc/LAN network (also on internet)
+    Runs update proxy for parts to stay up to date
+    Used for debugging initially, then debugging moves to comm cluster
+
+Sensory "eye" cluster:
+* Motion sensor
+    Senses motion, creates syslog events, forwards to CNS
+* Camera
+    Provides purely reference data for use analyzing log events
+
+Sensory "eye" cluster #2:
+* Motion sensor
+    Helps tune out false positives
+* Camera
+    Cameras record each other for security
+
+Sensory "sound" cluster:
+* Microphone
+    Reference data for spacial awareness
+
+Sensory "sound" cluster #2:
+* Microphone
+    Used for triangulation and spacial awareness
+
+
+==== Later Versions ====
+
+Communication cluster:
+* Speech recognition system
+    JASPER on raspberry pi
+    Used for authentication requests, etc.
+* Visual/keyboard/mouse communication system
+    Used for authentication, debugging, etc.
+
+Analytics cluster:
+* Analytics Processor
+    Higher brain function; makes high-level decisions
+    Establishes the nature of entities
+        Tries to identify person(/non-person) on motion sense
+        Tries to identify types of sound sources
