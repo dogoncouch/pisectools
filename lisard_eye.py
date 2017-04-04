@@ -21,26 +21,50 @@
 #_OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #_SOFTWARE.
 
-import time
+from time import sleep, strftime
+import datetime
 import RPi.GPIO as io
 io.setmode(io.BCM)
 import syslog
+from picamera import PiCamera
 
 syslog.openlog(facility=syslog.LOG_LOCAL2)
 # syslog.openlog(ident="Motion", logoption=syslog.LOG_PID, facility=syslog.LOG_LOCAL2)
 pir_pin = 18
 
 io.setup(pir_pin, io.IN)
+camera = PiCamera()
+camera.resolution = (848, 480)
+camera.framerate = 15
+
 ismotion = False
-idlecount = 40
+scount = False
 
 while True:
     if io.input(pir_pin):
         if not ismotion:
-            syslog.syslog(syslog.LOG_INFO, "Motion detected")
+            syslog.syslog(syslog.LOG_INFO, 'Motion detected')
             ismotion = True
+            scount = False
+            datestamp = \
+                    datetime.datetime.now().strftime('%Y-%m-%d-%H%M%S')
+            filename = 'home/pi/video-' + datestamp + '.h264'
+            camera.annotate_text = datestamp
+            camera.start_recording(filename)
+            syslog.syslog(syslog.LOG_INFO, 'Video recording started: ' + \
+                    filename)
+        else:
+            if scount:
+                datestamp = \
+                        datetime.datetime.now().strftime('%Y-%m-%d-%H%M%S')
+                camera.annotate_text = datestamp
+                scount = False
+            else:
+                scount = True
     else:
         if ismotion:
-            syslog.syslog(syslog.LOG_INFO, "Motion stopped")
+            syslog.syslog(syslog.LOG_INFO, 'Motion stopped')
+            camera.stop_recording()
+            syslog.syslog(syslog.LOG_INFO, 'Video recording stopped')
             ismotion = False
-    time.sleep(0.5)
+    sleep(0.5)
