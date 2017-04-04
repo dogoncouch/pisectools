@@ -23,8 +23,14 @@
 
 all: none
 
+default: none
+
 none:
 	echo More explicit instructions needed.
 
 init:
-	scripts/initpi.sh
+	util/initpi.sh
+
+ext:
+	util/initpi.sh
+	util/moreinitpi.sh
