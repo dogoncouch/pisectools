@@ -22,8 +22,8 @@
 #_SOFTWARE.
 
 echo Changing font face in /etc/default/console-setup
-sed -i 's/FONTFACE=""/FONTFACE="Terminus"/' /etc/default/console-setup
+sudo sed -i 's/FONTFACE=""/FONTFACE="Terminus"/' /etc/default/console-setup
 echo Changing font size in /etc/default/console-setup
-sed -i 's/FONTSIZE=""/FONTSIZE="16x32"/' /etc/default/console-setup
+sudo sed -i 's/FONTSIZE=""/FONTSIZE="16x32"/' /etc/default/console-setup
 echo Restarting console-setup
 sudo /etc/init.d/console-setup restart

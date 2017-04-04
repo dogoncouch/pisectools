@@ -34,3 +34,6 @@ init:
 ext:
 	util/initpi.sh
 	util/moreinitpi.sh
+
+font:
+	util/bigfont.sh
