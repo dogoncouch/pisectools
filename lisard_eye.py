@@ -36,19 +36,20 @@ io.setup(pir_pin, io.IN)
 camera = PiCamera()
 camera.resolution = (848, 480)
 camera.framerate = 15
+videopath = '/home/pi'
 
 ismotion = False
-scount = False
+scount = True
 
 while True:
     if io.input(pir_pin):
         if not ismotion:
             syslog.syslog(syslog.LOG_INFO, 'Motion detected')
             ismotion = True
-            scount = False
+            scount = True
             datestamp = \
                     datetime.datetime.now().strftime('%Y-%m-%d-%H%M%S')
-            filename = 'home/pi/video-' + datestamp + '.h264'
+            filename = videopath + 'video-' + datestamp + '.h264'
             camera.annotate_text = datestamp
             camera.start_recording(filename)
             syslog.syslog(syslog.LOG_INFO, 'Video recording started: ' + \
@@ -65,6 +66,7 @@ while True:
         if ismotion:
             syslog.syslog(syslog.LOG_INFO, 'Motion stopped')
             camera.stop_recording()
-            syslog.syslog(syslog.LOG_INFO, 'Video recording stopped')
+            syslog.syslog(syslog.LOG_INFO, 'Video recording stopped: ' + \
+                    filename)
             ismotion = False
     sleep(0.5)
