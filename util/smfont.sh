@@ -1,3 +1,4 @@
+#!/bin/sh
 #_MIT License
 #_
 #_Copyright (c) 2017 Dan Persons (dpersonsdev@gmail.com)
@@ -20,24 +21,9 @@
 #_OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #_SOFTWARE.
 
-
-all: none
-
-default: none
-
-none:
-	echo More explicit instructions needed.
-
-init:
-	util/initpi.sh
-
-moreinit:
-	util/moreinitpi.sh
-
-ext: init moreinit
-
-font:
-	util/bigfont.sh
-
-smfont:
-	util/smfont.sh
+echo Changing font face in /etc/default/console-setup
+sudo sed -i 's/FONTFACE="Terminus"/FONTFACE=""/' /etc/default/console-setup
+echo Changing font size in /etc/default/console-setup
+sudo sed -i 's/FONTSIZE="16x32"/FONTSIZE=""/' /etc/default/console-setup
+echo Restarting console-setup
+sudo /etc/init.d/console-setup restart
