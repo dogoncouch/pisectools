@@ -13,7 +13,7 @@ LISARD relies heavily on the syslog daemon for its sense of awareness and memory
 LISARD is built on Raspberry Pi hardware. It is affordable and efficient, and it can run Linux and rsyslog.
 
 ## Software
-LISARD currently uses the Raspbian operating system, which is based on Debian Linux, and comes with a lot of well written libraries for Raspberry Pi hardware. Most of our programming is in Python, with scripts and Makefiles for setup and administration tasks.
+LISARD currently uses the Raspbian operating system, which is based on Debian Linux, and comes with a lot of well written libraries for Raspberry Pi hardware. Most of our programming is in Python, with scripts and Makefiles for setup and administrative tasks.
 
 ## Simplicity
 One of the goals of this project is to be as simple and understandable as is reasonable.
