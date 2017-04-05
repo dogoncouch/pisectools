@@ -39,5 +39,4 @@ sudo make
 cd ..
 git clone https://github.com/dogoncouch/dev-shortcuts.git
 sudo cp dev-shortcuts/gitup.sh /usr/local/bin/gitup
-cd ..
 sudo rm -rf logshell dirutils dev-shortcuts
