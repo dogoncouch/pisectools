@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+
 #_MIT License
 #_
 #_Copyright (c) 2017 Dan Persons (dpersonsdev@gmail.com)
@@ -21,6 +22,7 @@
 #_OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #_SOFTWARE.
 
+
 from time import sleep, strftime
 import datetime
 import RPi.GPIO as io
@@ -28,40 +30,42 @@ io.setmode(io.BCM)
 import syslog
 from picamera import PiCamera
 
-syslog.openlog(facility=syslog.LOG_LOCAL2)
-# syslog.openlog(ident="Motion", logoption=syslog.LOG_PID, facility=syslog.LOG_LOCAL2)
-pir_pin = 18
 
+syslog.openlog(facility=syslog.LOG_LOCAL2)
+
+pir_pin = 18
 io.setup(pir_pin, io.IN)
+
 camera = PiCamera()
 camera.resolution = (848, 480)
 camera.framerate = 15
 videopath = '/home/pi'
 
 ismotion = False
-scount = True
+scount = 60
+
 
 while True:
     if io.input(pir_pin):
         if not ismotion:
             syslog.syslog(syslog.LOG_INFO, 'Motion detected')
             ismotion = True
-            scount = True
+            scount = 60
             datestamp = \
-                    datetime.datetime.now().strftime('%Y-%m-%d-%H%M%S')
+                    datetime.datetime.now().strftime('%Y-%m-%d-%H%M')
             filename = videopath + 'video-' + datestamp + '.h264'
             camera.annotate_text = datestamp
             camera.start_recording(filename)
             syslog.syslog(syslog.LOG_INFO, 'Video recording started: ' + \
                     filename)
         else:
-            if scount:
+            if scount == 0:
                 datestamp = \
-                        datetime.datetime.now().strftime('%Y-%m-%d-%H%M%S')
+                        datetime.datetime.now().strftime('%Y-%m-%d-%H%M')
                 camera.annotate_text = datestamp
-                scount = False
+                scount = 60
             else:
-                scount = True
+                scount = scount - 1
     else:
         if ismotion:
             syslog.syslog(syslog.LOG_INFO, 'Motion stopped')
