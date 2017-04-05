@@ -10,7 +10,13 @@ LISARD is a security intelligence framework. It is currently in the early stages
 LISARD relies heavily on the syslog daemon for its sense of awareness and memory. One of the goals is to make use of syslog's robust set of features, and not reinvent the wheel. We are currently using rsyslog for logging.
 
 ## Hardware
-LISARD is built on Raspberry Pi hardware. It is affordable and efficient, and it can run Linux and rsyslog.
+LISARD is built on Raspberry Pi hardware. Here are a few of the reasons:
+
+* It is affordable
+* It is efficient
+* It can run Linux and syslog
+* It comes with programmable inputs and outputs
+* It is well supported
 
 ## Software
 LISARD currently uses the Raspbian operating system, which is based on Debian Linux, and comes with a lot of well written libraries for Raspberry Pi hardware. Most of our programming is in Python, with scripts and Makefiles for setup and administrative tasks.
