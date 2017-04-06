@@ -98,14 +98,26 @@ class ModesCore:
 
             # Radio mode:
             if io.input(self.radio_pin):
-                subprocess.Popen('amixer cset numid 3 1')
-                subprocess.Popen('mpg123 ' + self.radiostream)
-                self.isradio = True
+                if not self.isradio:
+                    subprocess.Popen('amixer cset numid 3 1')
+                    subprocess.Popen('mpg123 ' + self.radiostream)
+                    self.isradio = True
             else:
                 if self.isradio:
                     subprocess.Popen('killall mpg123')
                     subprocess.Popen('amixer cset numid=3 0')
                     self.isradio = False
+
+
+            # Wifi mode:
+            if io.input(self.wifi_pin):
+                if not self.iswifi:
+                    subprocess.popen('/home/pi/bin/wifi.sh')
+                    self.iswifi = True
+            else:
+                if self.iswifi:
+                    subprocess.popen('killall wifi.sh')
+                    self.iswifi = False
 
 
             # Shutdown mode:
