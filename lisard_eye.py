@@ -28,6 +28,9 @@ from datetime import datetime
 import RPi.GPIO as io
 io.setmode(io.BCM)
 import syslog
+import argparse
+import signal
+from sys import exit
 from picamera import PiCamera, Color
 
 
@@ -37,21 +40,69 @@ class LisardEyeCore:
     def __init__(self):
         syslog.openlog(facility=syslog.LOG_LOCAL2)
 
+        # Clean shutdown:
+        signal.signal(signal.SIGTERM, self.sigterm_handler)
+
+        self.ismotion= False
         self.pir_pin = 18
         io.setup(self.pir_pin, io.IN)
         
-        self.camera = PiCamera()
-        self.camera.resolution = (400, 300)
-        # self.camera.resolution = (512, 384)
-        self.camera.framerate = 15
-        self.camera.annotate_background = Color('black')
-        self.camera.annotate_text_size = 8
+        # CLI options:
+        parser = argparse.ArgumentParser()
+        parser.add_argument("--no-cam", action="store_true",
+                help="disable camera support")
+        parser.add_argument("--no-cam-date", action="store_true",
+                help="disable datestamp in camera")
+        parser.add_argument("--hd", action="store_true",
+                help="enable 1080p video")
+        parser.add_argument("--sd", action="store_true",
+                help="enable medium quality video")
+        args = parser.parse_args()
         
-        self.videopath = '/home/pi/Videos'
         
-        self.ismotion = False
-        self.scount = 40
+        # Video recording mode setup:
+        if not args.no-cam:
+            self.camera = PiCamera()
+            self.isrecording = False
+            self.longdatestamp = ''
+            self.videopath = '/home/pi/Videos'
+        
+            if args.hd:
+                # self.camera.sensor_mode = 1
+                self.camera.resolution = (1920, 1080)
+                self.camera.framerate = 30
+                if args.cam-date: self.camera.annotate_text_size = 25
+            elif args.sd:
+                # self.camera.sensor_mode = 5
+                self.camera.resolution = (800, 600)
+                self.camera.framerate = 30
+                if args.cam-date: self.camera.annotate_text_size = 10
+            else:
+                self.camera.resolution = (400, 300)
+                self.camera.framerate = 15
+                if args.cam-date: self.camera.annotate_text_size = 8
+            else:
+                
+            if args.cam-date:
+                self.camera.annotate_background = Color('black')
+                self.datestamp = ''
+                self.scount = 40
 
+
+
+    def sigterm_handler(self, signal, frame):
+        self.camera.stop_recording()
+        exit(0)
+
+
+
+    def do_run(self):
+        try:
+            self.do_watch()
+        except KeyboardInterrupt:
+            self.camera.stop_recording
+            exit(0)
+    
 
 
     def do_watch(self):
@@ -61,33 +112,37 @@ class LisardEyeCore:
                 if not self.ismotion:
                     syslog.syslog(syslog.LOG_INFO, 'PIR: Motion detected')
                     self.ismotion = True
-                    self.scount = 40
-                    self.datestamp = \
-                            datetime.now().strftime('%Y-%m-%d-%H%M')
-                    self.longdatestamp = \
-                            datetime.now().strftime('%Y-%m-%d-%H%M%S')
-                    self.filename = self.videopath + '/video-' + \
-                            self.longdatestamp + '.h264'
-                    self.camera.annotate_text = self.datestamp
-                    self.camera.start_recording(self.filename)
-                    syslog.syslog(syslog.LOG_INFO,
-                            'Video: Started: ' + self.longdatestamp + \
-                                    '.h264')
+                    if not args.no-cam:
+                        if not args.no-cam-date:
+                            self.scount = 40
+                            self.datestamp = \
+                                    datetime.now().strftime('%Y-%m-%d-%H%M')
+                            self.camera.annotate_text = self.datestamp
+                        self.longdatestamp = \
+                                datetime.now().strftime('%Y-%m-%d-%H%M%S')
+                        self.filename = self.videopath + '/video-' + \
+                                self.longdatestamp + '.h264'
+                        self.camera.start_recording(self.filename)
+                        syslog.syslog(syslog.LOG_INFO,
+                                'Video: Started: ' + self.longdatestamp + \
+                                        '.h264')
                 else:
-                    if self.scount == 0:
-                        self.datestamp = \
-                                datetime.now().strftime('%Y-%m-%d-%H%M')
-                        self.camera.annotate_text = self.datestamp
-                        self.scount = 40
-                    else:
-                        self.scount = self.scount - 1
+                    if not args.no-cam-date:
+                        if self.scount == 0:
+                            self.datestamp = \
+                                    datetime.now().strftime('%Y-%m-%d-%H%M')
+                            self.camera.annotate_text = self.datestamp
+                            self.scount = 40
+                        else:
+                            self.scount = self.scount - 1
             else:
                 if self.ismotion:
                     syslog.syslog(syslog.LOG_INFO, 'PIR: Motion stopped')
-                    self.camera.stop_recording()
-                    syslog.syslog(syslog.LOG_INFO,
-                            'Video: Stopped: ' + self.longdatestamp + \
-                                    '.h264')
+                    if not args.no-cam:
+                        self.camera.stop_recording()
+                        syslog.syslog(syslog.LOG_INFO,
+                                'Video: Stopped: ' + self.longdatestamp + \
+                                        '.h264')
                     self.ismotion = False
             sleep(0.5)
 
@@ -95,8 +150,8 @@ class LisardEyeCore:
 
 def main():
     sentry = LisardEyeCore()
-    sentry.do_watch()
+    sentry.do_run()
 
 if __name__ == "__main__":
     sentry = LisardEyeCore()
-    sentry.do_watch()
+    sentry.do_run()
