@@ -37,7 +37,7 @@ pir_pin = 18
 io.setup(pir_pin, io.IN)
 
 camera = PiCamera()
-camera.resolution = (848, 480)
+camera.resolution = (640, 480)
 camera.framerate = 15
 videopath = '/home/pi'
 
