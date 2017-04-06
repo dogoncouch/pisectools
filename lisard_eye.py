@@ -41,11 +41,11 @@ class LisardEyeCore:
         io.setup(self.pir_pin, io.IN)
         
         self.camera = PiCamera()
-        self.camera.resolution = (320, 240)
+        self.camera.resolution = (400, 300)
+        # self.camera.resolution = (512, 384)
         self.camera.framerate = 15
         self.camera.annotate_background = Color('black')
-        self.camera.annotate_text_size = 10
-        self.camera.framerate = 15
+        self.camera.annotate_text_size = 8
         
         self.videopath = '/home/pi/Videos'
         
