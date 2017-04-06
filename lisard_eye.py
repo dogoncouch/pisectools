@@ -28,7 +28,7 @@ import datetime
 import RPi.GPIO as io
 io.setmode(io.BCM)
 import syslog
-from picamera import PiCamera
+from picamera import PiCamera, Color
 
 
 syslog.openlog(facility=syslog.LOG_LOCAL2)
@@ -40,6 +40,10 @@ camera = PiCamera()
 camera.resolution = (320, 240)
 camera.framerate = 15
 videopath = '/home/pi/Videos'
+camera.annotate_text_size = 10
+camera.annotate_background = Color('black')
+camera.framerate = 15
+videopath = '/home/pi/Video'
 
 ismotion = False
 scount = 60
