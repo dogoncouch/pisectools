@@ -50,7 +50,7 @@ scount = 40
 
 
 
-def do_watch()
+def do_watch():
     while True:
         if io.input(pir_pin):
             if not ismotion:
