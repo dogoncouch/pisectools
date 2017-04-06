@@ -31,59 +31,70 @@ import syslog
 from picamera import PiCamera, Color
 
 
-syslog.openlog(facility=syslog.LOG_LOCAL2)
 
-pir_pin = 18
-io.setup(pir_pin, io.IN)
+class LisardEyeCore:
+    
+    def __init__(self):
+        syslog.openlog(facility=syslog.LOG_LOCAL2)
 
-camera = PiCamera()
-camera.resolution = (320, 240)
-camera.framerate = 15
-camera.annotate_text_size = 10
-camera.annotate_background = Color('black')
-camera.framerate = 15
+        self.pir_pin = 18
+        io.setup(self.pir_pin, io.IN)
+        
+        self.camera = PiCamera()
+        self.camera.resolution = (320, 240)
+        self.camera.framerate = 15
+        self.camera.annotate_text_size = 10
+        self.camera.annotate_background = Color('black')
+        self.camera.framerate = 15
+        
+        self.videopath = '/home/pi/Videos'
+        
+        self.ismotion = False
+        self.scount = 40
 
-videopath = '/home/pi/Videos'
-
-ismotion = False
-scount = 40
 
 
+    def do_watch(self):
 
-def do_watch():
-    while True:
-        if io.input(pir_pin):
-            if not ismotion:
-                syslog.syslog(syslog.LOG_INFO, 'PIR: Motion detected')
-                ismotion = True
-                scount = 40
-                datestamp = datetime.now().strftime('%Y-%m-%d-%H%M')
-                longdatestamp = datetime.now().strftime('%Y-%m-%d-%H%M%S')
-                filename = videopath + '/video-' + longdatestamp + '.h264'
-                camera.annotate_text = datestamp
-                camera.start_recording(filename)
-                syslog.syslog(syslog.LOG_INFO,
-                        'Video: recording started: ' + filename)
-            else:
-                if scount == 0:
-                    datestamp = datetime.now().strftime('%Y-%m-%d-%H%M')
-                    camera.annotate_text = datestamp
-                    scount = 40
+        while True:
+            if io.input(self.pir_pin):
+                if not ismotion:
+                    syslog.syslog(syslog.LOG_INFO, 'PIR: Motion detected')
+                    self.ismotion = True
+                    self.scount = 40
+                    self.datestamp = \
+                            datetime.now().strftime('%Y-%m-%d-%H%M')
+                    self.longdatestamp = \
+                            datetime.now().strftime('%Y-%m-%d-%H%M%S')
+                    self.filename = self.videopath + '/video-' + \
+                            self.longdatestamp + '.h264'
+                    self.camera.annotate_text = self.datestamp
+                    self.camera.start_recording(self.filename)
+                    syslog.syslog(syslog.LOG_INFO,
+                            'Video: recording started: ' + self.filename)
                 else:
-                    scount = scount - 1
-        else:
-            if ismotion:
-                syslog.syslog(syslog.LOG_INFO, 'PIR: Motion stopped')
-                camera.stop_recording()
-                syslog.syslog(syslog.LOG_INFO,
-                        'Video: recording stopped: ' + filename)
-                ismotion = False
-        sleep(0.5)
+                    if self.scount == 0:
+                        self.datestamp = \
+                                datetime.now().strftime('%Y-%m-%d-%H%M')
+                        self.camera.annotate_text = self.datestamp
+                        self.scount = 40
+                    else:
+                        self.scount = self.scount - 1
+            else:
+                if self.ismotion:
+                    syslog.syslog(syslog.LOG_INFO, 'PIR: Motion stopped')
+                    self.camera.stop_recording()
+                    syslog.syslog(syslog.LOG_INFO,
+                            'Video: recording stopped: ' + self.filename)
+                    self.ismotion = False
+            sleep(0.5)
 
 
 
 def main():
-    do_watch()
+    sentry = LisardEyeCore()
+    sentry.do_watch()
 
 if __name__ == "__main__":
-    do_watch()
+    sentry = LisardEyeCore()
+    sentry.do_watch()
