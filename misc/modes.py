@@ -32,13 +32,15 @@ import RPi.GPIO as io
 io.setmode(io.BCM)
 from picamera import PiCamera, Color
 
-signal.signal(signal.SIGTERM, sigterm_handler)
 
 
 class ModesCore:
     
     def __init__(self):
 
+        # Clean shutdown:
+        signal.signal(signal.SIGTERM, self.sigterm_handler)
+        
         # Video recording mode setup:
         self.cam_pin = 2
         io.setup(self.cam_pin, io.IN)
@@ -93,7 +95,7 @@ class ModesCore:
 
 
 
-    def sigterm_handler(self, signal, frame)
+    def sigterm_handler(self, signal, frame):
         self.do_stop()
         exit(0)
 
