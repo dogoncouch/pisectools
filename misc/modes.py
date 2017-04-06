@@ -40,7 +40,7 @@ class ModesCore:
     def __init__(self):
 
         # Video recording mode setup:
-        self.cam_pin = 24
+        self.cam_pin = 2
         io.setup(self.cam_pin, io.IN)
         self.camera = PiCamera()
         self.camera.resolution = (800, 600)
@@ -61,8 +61,11 @@ class ModesCore:
         self.isradio = False
         
         # Wifi mode setup:
-        self.wifi_pin = 2
+        self.wifi_pin = 27
         io.setup(self.wifi_pin, io.IN)
+        
+        # Stop mode setup:
+        self.stop_pin = 24
         
         # Shutdown mode setup:
         self.shutdown_pin = 10
@@ -141,11 +144,6 @@ class ModesCore:
                     subprocess.Popen('amixer cset numid 3 1')
                     subprocess.Popen('mpg123 ' + self.radiostream)
                     self.isradio = True
-            # else:
-            #     if self.isradio:
-            #         subprocess.Popen('killall mpg123')
-            #         subprocess.Popen('amixer cset numid=3 0')
-            #         self.isradio = False
 
 
             # Wifi mode:
@@ -153,10 +151,6 @@ class ModesCore:
                 if not self.iswifi:
                     subprocess.popen('/home/pi/bin/wifi.sh')
                     self.iswifi = True
-            # else:
-            #     if self.iswifi:
-            #         subprocess.popen('killall wifi.sh')
-            #         self.iswifi = False
 
 
             # Stop mode:
