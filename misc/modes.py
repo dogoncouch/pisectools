@@ -68,6 +68,7 @@ class ModesCore:
         
         # Stop mode setup:
         self.stop_pin = 24
+        io.setup(self.stop_pin, io.IN)
         
         # Shutdown mode setup:
         self.shutdown_pin = 10
