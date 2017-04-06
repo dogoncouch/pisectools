@@ -24,7 +24,7 @@
 
 
 from time import sleep, strftime
-import datetime
+from datetime import datetime
 import RPi.GPIO as io
 io.setmode(io.BCM)
 import syslog
@@ -39,42 +39,51 @@ io.setup(pir_pin, io.IN)
 camera = PiCamera()
 camera.resolution = (320, 240)
 camera.framerate = 15
-videopath = '/home/pi/Videos'
 camera.annotate_text_size = 10
 camera.annotate_background = Color('black')
 camera.framerate = 15
-videopath = '/home/pi/Video'
+
+videopath = '/home/pi/Videos'
 
 ismotion = False
-scount = 60
+scount = 40
 
 
-while True:
-    if io.input(pir_pin):
-        if not ismotion:
-            syslog.syslog(syslog.LOG_INFO, 'PIR: Motion detected')
-            ismotion = True
-            scount = 60
-            datestamp = \
-                    datetime.datetime.now().strftime('%Y-%m-%d-%H%M')
-            filename = videopath + '/video-' + datestamp + '.h264'
-            camera.annotate_text = datestamp
-            camera.start_recording(filename)
-            syslog.syslog(syslog.LOG_INFO, 'Video: recording started: ' + \
-                    filename)
-        else:
-            if scount == 0:
-                datestamp = \
-                        datetime.datetime.now().strftime('%Y-%m-%d-%H%M')
+
+def do_watch()
+    while True:
+        if io.input(pir_pin):
+            if not ismotion:
+                syslog.syslog(syslog.LOG_INFO, 'PIR: Motion detected')
+                ismotion = True
+                scount = 40
+                datestamp = datetime.now().strftime('%Y-%m-%d-%H%M')
+                longdatestamp = datetime.now().strftime('%Y-%m-%d-%H%M%S')
+                filename = videopath + '/video-' + longdatestamp + '.h264'
                 camera.annotate_text = datestamp
-                scount = 60
+                camera.start_recording(filename)
+                syslog.syslog(syslog.LOG_INFO,
+                        'Video: recording started: ' + filename)
             else:
-                scount = scount - 1
-    else:
-        if ismotion:
-            syslog.syslog(syslog.LOG_INFO, 'PIR: Motion stopped')
-            camera.stop_recording()
-            syslog.syslog(syslog.LOG_INFO, 'Video: recording stopped: ' + \
-                    filename)
-            ismotion = False
-    sleep(0.5)
+                if scount == 0:
+                    datestamp = datetime.now().strftime('%Y-%m-%d-%H%M')
+                    camera.annotate_text = datestamp
+                    scount = 40
+                else:
+                    scount = scount - 1
+        else:
+            if ismotion:
+                syslog.syslog(syslog.LOG_INFO, 'PIR: Motion stopped')
+                camera.stop_recording()
+                syslog.syslog(syslog.LOG_INFO,
+                        'Video: recording stopped: ' + filename)
+                ismotion = False
+        sleep(0.5)
+
+
+
+def main():
+    do_watch()
+
+if __name__ = "__main__":
+    do_watch()
