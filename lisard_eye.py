@@ -58,7 +58,7 @@ class LisardEyeCore:
 
         while True:
             if io.input(self.pir_pin):
-                if not ismotion:
+                if not self.ismotion:
                     syslog.syslog(syslog.LOG_INFO, 'PIR: Motion detected')
                     self.ismotion = True
                     self.scount = 40
