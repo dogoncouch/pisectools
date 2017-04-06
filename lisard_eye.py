@@ -71,7 +71,7 @@ class LisardEyeCore:
                     self.camera.annotate_text = self.datestamp
                     self.camera.start_recording(self.filename)
                     syslog.syslog(syslog.LOG_INFO,
-                            'Video: recording started: ' + self.filename)
+                            'Video: Started: ' + self.longdatestamp)
                 else:
                     if self.scount == 0:
                         self.datestamp = \
@@ -85,7 +85,7 @@ class LisardEyeCore:
                     syslog.syslog(syslog.LOG_INFO, 'PIR: Motion stopped')
                     self.camera.stop_recording()
                     syslog.syslog(syslog.LOG_INFO,
-                            'Video: recording stopped: ' + self.filename)
+                            'Video: Stopped: ' + self.longdatestamp)
                     self.ismotion = False
             sleep(0.5)
 
