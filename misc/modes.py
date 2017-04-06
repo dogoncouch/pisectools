@@ -25,7 +25,7 @@
 
 from time import sleep, strftime
 from datetime import datetime
-import sys
+from sys import exit
 import signal
 import subprocess
 import RPi.GPIO as io
@@ -81,7 +81,7 @@ class ModesCore:
             self.do_modes()
         except KeyboardInterrupt:
             self.do_stop()
-            sys.exit(0)
+            exit(0)
 
 
 
@@ -98,7 +98,7 @@ class ModesCore:
 
     def sigterm_handler(self, signal, frame):
         self.do_stop()
-        sys.exit(0)
+        exit(0)
 
     
 
