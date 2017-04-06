@@ -25,7 +25,7 @@
 
 from time import sleep, strftime
 from datetime import datetime
-from sys import exit
+import sys
 import signal
 import subprocess
 import RPi.GPIO as io
@@ -81,7 +81,7 @@ class ModesCore:
             self.do_modes()
         except KeyboardInterrupt:
             self.do_stop()
-            exit(0)
+            sys.exit(0)
 
 
 
@@ -89,16 +89,16 @@ class ModesCore:
         self.camera.stop_recording()
         self.isrecording = False
         self.scount = 40
-        subprocess.Popen('killall mpg123')
+        subprocess.Popen([sys.executable, '/usr/bin/killall mpg123'])
         self.isradio = False
-        subprocess.Popen('killall wifi.sh')
+        subprocess.Popen([sys.executable, '/usr/bin/killall wifi.sh'])
         self.iswifi = False
 
 
 
     def sigterm_handler(self, signal, frame):
         self.do_stop()
-        exit(0)
+        sys.exit(0)
 
     
 
@@ -144,15 +144,18 @@ class ModesCore:
             # Radio mode:
             if io.input(self.radio_pin):
                 if not self.isradio:
-                    subprocess.Popen('amixer cset numid 3 1')
-                    subprocess.Popen('mpg123 ' + self.radiostream)
+                    subprocess.Popen([sys.executable,
+                        '/usr/bin/amixer cset numid 3 1'])
+                    subprocess.Popen([sys.executable,
+                        '/usr/bin/mpg123 ' + self.radiostream])
                     self.isradio = True
 
 
             # Wifi mode:
             if io.input(self.wifi_pin):
                 if not self.iswifi:
-                    subprocess.popen('/home/pi/bin/wifi.sh')
+                    subprocess.popen([sys.executable,
+                        '/home/pi/bin/wifi.sh'])
                     self.iswifi = True
 
 
@@ -164,7 +167,7 @@ class ModesCore:
             # Shutdown mode:
             if io.input(self.shutdown_pin):
                 self.do_stop()
-                subprocess.Popen('shutdown -h now')
+                subprocess.Popen([sys.executable, 'shutdown -h now'])
 
 
             sleep(0.5)
