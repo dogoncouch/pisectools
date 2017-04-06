@@ -43,8 +43,8 @@ class LisardEyeCore:
         self.camera = PiCamera()
         self.camera.resolution = (320, 240)
         self.camera.framerate = 15
-        self.camera.annotate_text_size = 10
         self.camera.annotate_background = Color('black')
+        self.camera.annotate_text_size = 10
         self.camera.framerate = 15
         
         self.videopath = '/home/pi/Videos'
