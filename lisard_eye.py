@@ -38,11 +38,15 @@ from picamera import PiCamera, Color
 class LisardEyeCore:
     
     def __init__(self):
+        """Initialize LISARD eye system"""
+
+        # Open our log:
         syslog.openlog(facility=syslog.LOG_LOCAL2)
 
         # Clean shutdown:
         signal.signal(signal.SIGTERM, self.sigterm_handler)
 
+        # Basic settings:
         self.ismotion= False
         self.pir_pin = 18
         io.setup(self.pir_pin, io.IN)
@@ -59,7 +63,7 @@ class LisardEyeCore:
                 help="enable medium quality video")
         args = parser.parse_args()
         
-        
+
         # Video recording mode setup:
         if not args.no-cam:
             self.camera = PiCamera()
@@ -91,12 +95,14 @@ class LisardEyeCore:
 
 
     def sigterm_handler(self, signal, frame):
+        """Exits cleanly in the event of shutdown/sigterm"""
         self.camera.stop_recording()
         exit(0)
 
 
 
     def do_run(self):
+        """Runs the watch job"""
         try:
             self.do_watch()
         except KeyboardInterrupt:
@@ -106,7 +112,7 @@ class LisardEyeCore:
 
 
     def do_watch(self):
-
+        """Monitors motion sensor and records video (optional)"""
         while True:
             if io.input(self.pir_pin):
                 if not self.ismotion:
