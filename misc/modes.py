@@ -37,7 +37,7 @@ class ModesCore:
     def __init__(self):
 
         # Video recording mode setup:
-        self.cam_pin = 18 # To Do: change this?
+        self.cam_pin = 24 # To Do: change this?
         io.setup(self.cam_pin, io.IN)
         self.camera = PiCamera()
         self.camera.resolution = (800, 600)
@@ -50,17 +50,17 @@ class ModesCore:
         self.scount = 40
 
         # Radio mode setup:
-        self.radio_pin = # To Do
+        self.radio_pin = 22# To Do
         io.setup(self.radio_pin, io.IN)
         self.radiostream = 'http://amber.streamguys.com:4860'
         self.isradio = False
         
         # Wifi mode setup:
-        self.wifi_pin = # To Do
+        self.wifi_pin = 2# To Do: check
         io.setup(self.wifi_pin, io.IN)
         
         # Shutdown mode setup:
-        self.shutdown_pin = # To Do
+        self.shutdown_pin = 10 # To Do: check
         io.setup(self.shutdown_pin, io.IN)
 
 
