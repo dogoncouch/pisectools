@@ -89,9 +89,9 @@ class ModesCore:
         self.camera.stop_recording()
         self.isrecording = False
         self.scount = 40
-        subprocess.Popen([sys.executable, '/usr/bin/killall mpg123'])
+        subprocess.Popen(['/usr/bin/killall', 'mpg123'])
         self.isradio = False
-        subprocess.Popen([sys.executable, '/usr/bin/killall wifi.sh'])
+        subprocess.Popen(['/usr/bin/killall', 'wifi.sh'])
         self.iswifi = False
 
 
@@ -144,18 +144,16 @@ class ModesCore:
             # Radio mode:
             if io.input(self.radio_pin):
                 if not self.isradio:
-                    subprocess.Popen([sys.executable,
-                        '/usr/bin/amixer cset numid 3 1'])
-                    subprocess.Popen([sys.executable,
-                        '/usr/bin/mpg123 ' + self.radiostream])
+                    subprocess.Popen(['/usr/bin/amixer', 'cset', 'numid',
+                        '3', '1'])
+                    subprocess.Popen(['/usr/bin/mpg123 ', self.radiostream])
                     self.isradio = True
 
 
             # Wifi mode:
             if io.input(self.wifi_pin):
                 if not self.iswifi:
-                    subprocess.popen([sys.executable,
-                        '/home/pi/bin/wifi.sh'])
+                    subprocess.popen(['/home/pi/bin/wifi.sh'])
                     self.iswifi = True
 
 
@@ -167,7 +165,7 @@ class ModesCore:
             # Shutdown mode:
             if io.input(self.shutdown_pin):
                 self.do_stop()
-                subprocess.Popen([sys.executable, 'shutdown -h now'])
+                subprocess.Popen(['shutdown', '-h', 'now'])
 
 
             sleep(0.5)
