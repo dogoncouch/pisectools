@@ -40,3 +40,7 @@ cd ..
 git clone https://github.com/dogoncouch/dev-shortcuts.git
 sudo cp dev-shortcuts/gitup.sh /usr/local/bin/gitup
 sudo rm -rf logshell dirutils dev-shortcuts
+cp config/bashrc /home/pi/.bashrc
+cp config/vimrc /home/pi/.vimrc
+cp config/profile /home/pi/.profile
+cp config/logshell.conf /home/pi/.config/logshell.conf
