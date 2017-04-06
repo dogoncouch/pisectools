@@ -25,11 +25,14 @@
 
 from time import sleep, strftime
 from datetime import datetime
+from sys import exit
+import signal
 import subprocess
 import RPi.GPIO as io
 io.setmode(io.BCM)
 from picamera import PiCamera, Color
 
+signal.signal(signal.SIGTERM, sigterm_handler)
 
 
 class ModesCore:
@@ -42,8 +45,10 @@ class ModesCore:
         self.camera = PiCamera()
         self.camera.resolution = (800, 600)
         self.camera.framerate = 30
-        self.camera.annotate_background = Color('black')
-        self.camera.annotate_text_size = 10
+        # self.camera.annotate_background = Color('black')
+        # self.camera.annotate_text_size = 10
+        # self.datestamp = ''
+        self.longdatestamp = ''
         
         self.videopath = '/home/pi/Videos'
         self.isrecording = False
@@ -65,6 +70,32 @@ class ModesCore:
 
 
 
+    def do_run(self):
+        try:
+            self.do_modes()
+        except KeyboardInterrupt:
+            self.do_stop()
+            exit(0)
+
+
+
+    def do_stop(self):
+        self.camera.stop_recording()
+        self.isrecording = False
+        self.scount = 40
+        subprocess.Popen('killall mpg123')
+        self.isradio = False
+        subprocess.Popen('killall wifi.sh')
+        self.iswifi = False
+
+
+
+    def sigterm_handler(self, signal, frame)
+        self.do_stop()
+        exit(0)
+
+    
+
     def do_modes(self):
 
         while True:
@@ -72,28 +103,36 @@ class ModesCore:
             # Video recording mode:
             if io.input(self.cam_pin):
                 if not self.isrecording:
-                    self.datestamp = \
-                            datetime.now().strftime('%Y-%m-%d-%H%M')
+                    # self.datestamp = \
+                    #         datetime.now().strftime('%Y-%m-%d-%H%M')
                     self.longdatestamp = \
                             datetime.now().strftime('%Y-%m-%d-%H%M%S')
                     self.filename = self.videopath + '/video-' + \
                             self.longdatestamp + '.h264'
-                    self.camera.annotate_text = self.datestamp
+                    # self.camera.annotate_text = self.datestamp
                     self.camera.start_recording(self.filename)
                     self.isrecording = True
-                    self.scount = 40
-                else:
-                    if self.scount == 0:
-                        self.datestamp = \
-                                datetime.now().strftime('%Y-%m-%d-%H%M')
-                        self.camera.annotate_text = self.datestamp
-                        self.scount = 40
-                    else:
-                        self.scount = self.scount - 1
-            else:
-                if self.isrecording:
-                    self.camera.stop_recording()
-                    self.isrecording = False
+                    # self.scount = 40
+                # else:
+                #     if self.scount == 0:
+                #         self.datestamp = \
+                #                 datetime.now().strftime('%Y-%m-%d-%H%M')
+                #         self.camera.annotate_text = self.datestamp
+                #         self.scount = 40
+                #     else:
+                #         self.scount = self.scount - 1
+            # else:
+            #     if self.isrecording:
+            #         if self.scount == 0:
+            #             self.datestamp = \
+            #                     datetime.now().strftime('%Y-%m-%d-%H%M')
+            #             self.camera.annotate_text = self.datestamp
+            #             self.scount = 40
+            #         else:
+            #             self.scount = self.scount - 1
+                    
+                    # self.camera.stop_recording()
+                    # self.isrecording = False
 
 
             # Radio mode:
@@ -102,11 +141,11 @@ class ModesCore:
                     subprocess.Popen('amixer cset numid 3 1')
                     subprocess.Popen('mpg123 ' + self.radiostream)
                     self.isradio = True
-            else:
-                if self.isradio:
-                    subprocess.Popen('killall mpg123')
-                    subprocess.Popen('amixer cset numid=3 0')
-                    self.isradio = False
+            # else:
+            #     if self.isradio:
+            #         subprocess.Popen('killall mpg123')
+            #         subprocess.Popen('amixer cset numid=3 0')
+            #         self.isradio = False
 
 
             # Wifi mode:
@@ -114,15 +153,20 @@ class ModesCore:
                 if not self.iswifi:
                     subprocess.popen('/home/pi/bin/wifi.sh')
                     self.iswifi = True
-            else:
-                if self.iswifi:
-                    subprocess.popen('killall wifi.sh')
-                    self.iswifi = False
+            # else:
+            #     if self.iswifi:
+            #         subprocess.popen('killall wifi.sh')
+            #         self.iswifi = False
+
+
+            # Stop mode:
+            if io.input(self.stop_pin):
+                self.do_stop()
 
 
             # Shutdown mode:
             if io.input(self.shutdown_pin):
-                self.camera.stop_recording()
+                self.do_stop()
                 subprocess.Popen('shutdown -h now')
 
 
@@ -132,8 +176,8 @@ class ModesCore:
 
 def main():
     sentry = ModesCore()
-    sentry.do_modes()
+    sentry.do_run()
 
 if __name__ == "__main__":
     sentry = ModesCore()
-    sentry.do_modes()
+    sentry.do_run()
