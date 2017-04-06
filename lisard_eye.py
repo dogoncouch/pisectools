@@ -85,5 +85,5 @@ def do_watch():
 def main():
     do_watch()
 
-if __name__ = "__main__":
+if __name__ == "__main__":
     do_watch()
