@@ -27,7 +27,7 @@
 
 sudo apt-get update
 sudo apt-get upgrade -y
-sudo apt-get install -y vim vim-scripts screen lynx links
+sudo apt-get install -y vim vim-scripts screen lynx links python-paramiko
 sudo pip install logdissect
 git clone https://github.com/dogoncouch/logshell.git
 cd logshell
