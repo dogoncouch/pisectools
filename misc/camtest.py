@@ -5,12 +5,17 @@ from datetime import datetime
 from picamera import PiCamera, Color
 import paramiko
 
-camera = PiCamera()
 
 class CamTest:
     try:
         def __init__(self):
-            self.setstuff()
+            self.camera = PiCamera()
+            self.camera.resolution = (400, 300)
+            self.camera.framerate = 15
+            self.camera.annotate_background = Color('black')
+            self.camera.annotate_text_size = 20
+            self.camera.rotation = 270
+            self.openconnect('192.168.1.234')
 
         def openconnect(self, rhost):
             self.client = paramiko.SSHClient()
@@ -30,40 +35,32 @@ class CamTest:
                 print('Setting file:')
                 f = self.sftp.open('/home/pi/Videos/remotetest.h264', 'w')
                 print('Starting recording:')
-                camera.start_recording(f, format='h264', quality=30)
+                self.camera.start_recording(f, format='h264', quality=30)
                 print('Recording started')
-                camera.wait_recording(10)
-                camera.stop_recording()
+                self.camera.wait_recording(10)
+                self.camera.stop_recording()
                 self.closeconnect()
             except KeyboardInterrupt(): camera.stop_recording()
         
-        def setstuff(self):
-            camera.resolution = (400, 300)
-            camera.framerate = 15
-            camera.annotate_background = Color('black')
-            camera.annotate_text_size = 20
-            camera.rotation = 270
-            self.openconnect('192.168.1.234')
-        
         def cycleeffects(self):
-            for effect in camera.IMAGE_EFFECTS:
-            	camera.image_effect = effect
-            	camera.annotate_text = "Effect: %s" % effect
+            for effect in self.camera.IMAGE_EFFECTS:
+            	self.camera.image_effect = effect
+            	self.camera.annotate_text = "Effect: %s" % effect
             	sleep(5)
         
         def tryeffects(self):
             try:
             	while True:
-            		cycleeffects()
+            		self.cycleeffects()
             except KeyboardInterrupt: pass
         
         def andate(self):
             datestamp = datetime.now().strftime('%Y-%m-%d-%H:%M')
-            camera.annotate_text = datestamp
+            self.camera.annotate_text = datestamp
         
         def keepdate(self, seconds):
             for y in range( 0, seconds // 10):
-                andate()
+                self.andate()
                 sleep(10)
         
         def testrecord(self, x):
@@ -71,13 +68,13 @@ class CamTest:
                 testimate = x // 10
                 ourdatestamp = datetime.now().strftime('%Y-%m-%d-%H%M%S')
                 andate()
-                camera.start_recording(ourdatestamp + '.h264')
+                self.camera.start_recording(ourdatestamp + '.h264')
                 keepdate(x)
-                camera.stop_recording()
+                self.camera.stop_recording()
                 del(ourdatestamp)
             except KeyboardInterrupt(): camera.stop_recording()
         
-        def showhelp():
+        def showhelp(self):
             print('Functions:\n\nkeepdate():\n\tAnnotate timestamp\n' + \
                 'setstuff():\n\tSet a lower resolution and frame rate\n' + \
                 'tryeffects():\n\tCycle through effects\n' + \
@@ -94,5 +91,4 @@ def main():
 
 if __name__ == "__main__":
     camtest = CamTest()
-    print('Variables set; running testremote():')
     camtest.testremote('192.168.1.234')
