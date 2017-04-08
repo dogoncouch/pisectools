@@ -85,7 +85,6 @@ class LisardEyeCore:
                 self.camera.resolution = (400, 300)
                 self.camera.framerate = 15
                 if args.cam-date: self.camera.annotate_text_size = 8
-            else:
                 
             if args.cam-date:
                 self.camera.annotate_background = Color('black')
