@@ -19,7 +19,7 @@ LISARD is built on Raspberry Pi hardware. Here are a few of the reasons:
 * It is well supported
 
 ## Software
-LISARD currently uses the Raspbian operating system, which is based on Debian Linux, and comes with a lot of well written libraries for Raspberry Pi hardware. Most of our programming is in Python, with scripts and Makefiles for setup and administrative tasks.
+LISARD currently uses the Raspbian operating system, which is based on Debian Linux, and comes with a lot of well written libraries for Raspberry Pi hardware. Most of our programming is in Python, with shell scripts and Makefiles for setup and administrative tasks.
 
 ## Simplicity
 One of the goals of this project is to be as simple and understandable as is reasonable.
