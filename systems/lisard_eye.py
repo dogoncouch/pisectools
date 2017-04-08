@@ -96,6 +96,10 @@ class LisardEyeCore:
 
     def sigterm_handler(self, signal, frame):
         """Exits cleanly in the event of shutdown/sigterm"""
+        syslog.syslog(syslog.LOG_NOTICE, 'Received SIGTERM. Exiting')
+                    syslog.syslog(syslog.LOG_INFO,
+                            'Video: Stopped: ' + self.longdatestamp + \
+                                    '.h264')
         self.camera.stop_recording()
         exit(0)
 
@@ -106,6 +110,11 @@ class LisardEyeCore:
         try:
             self.do_watch()
         except KeyboardInterrupt:
+            syslog.syslog(syslog.LOG_NOTICE,
+                    'Received KeyboardInterrupt. Exiting')
+            syslog.syslog(syslog.LOG_INFO,
+                    'Video: Stopped: ' + self.longdatestamp + \
+                            '.h264')
             self.camera.stop_recording
             exit(0)
     
