@@ -59,8 +59,8 @@ class LisardEyeCore:
                 help="disable datestamp in camera")
         parser.add_argument("--hd", action="store_true",
                 help="enable 1080p video")
-        parser.add_argument("--sd", action="store_true",
-                help="enable medium quality video")
+        parser.add_argument("--svga", action="store_true",
+                help="enable svga video (800x600)")
         args = parser.parse_args()
         
 
@@ -76,7 +76,7 @@ class LisardEyeCore:
                 self.camera.resolution = (1920, 1080)
                 self.camera.framerate = 30
                 if args.cam-date: self.camera.annotate_text_size = 25
-            elif args.sd:
+            elif args.svga:
                 # self.camera.sensor_mode = 5
                 self.camera.resolution = (800, 600)
                 self.camera.framerate = 30

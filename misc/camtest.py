@@ -39,7 +39,7 @@ class CamTest:
                 print('Recording started')
                 self.camera.wait_recording(10)
                 self.camera.stop_recording()
-                self.closeconnect()
+                # self.closeconnect()
             except KeyboardInterrupt(): camera.stop_recording()
         
         def cycleeffects(self):
