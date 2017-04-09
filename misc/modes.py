@@ -205,7 +205,7 @@ class ModesCore:
             # Wifi mode:
             if io.input(self.wifi_pin):
                 if not self.iswifi:
-                    subprocess.popen(['/home/pi/bin/wifi.sh'])
+                    subprocess.Popen(['/home/pi/bin/wifi.sh'])
                     self.iswifi = True
 
 
