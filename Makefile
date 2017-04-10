@@ -29,15 +29,15 @@ none:
 	echo More explicit instructions needed.
 
 init:
-	util/initpi.sh
+	setup-scripts/initpi.sh
 
 moreinit:
-	util/moreinitpi.sh
+	setup-scripts/moreinitpi.sh
 
 ext: init moreinit
 
 font:
-	util/bigfont.sh
+	setup-scripts/bigfont.sh
 
 smfont:
-	util/smfont.sh
+	setup-scripts/smfont.sh
