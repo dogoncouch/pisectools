@@ -10,12 +10,12 @@ class CamTest:
     try:
         def __init__(self):
             self.camera = PiCamera()
-            self.camera.resolution = (400, 300)
+            self.camera.resolution = (800, 600)
             self.camera.framerate = 15
             self.camera.annotate_background = Color('black')
             self.camera.annotate_text_size = 20
             self.camera.rotation = 270
-            self.openconnect('192.168.1.234')
+            # self.openconnect('192.168.1.234')
 
         def openconnect(self, rhost):
             self.client = paramiko.SSHClient()
