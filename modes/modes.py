@@ -22,7 +22,7 @@
 #_OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #_SOFTWARE.
 
-from modes.modes.core import ModesCore
+from modes.core import ModesCore
 
 runmodes = ModesCore()
 runmodes.do_run()

@@ -22,7 +22,7 @@
 #_OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #_SOFTWARE.
 
-from eye.eye.core import LisardEyeCore
+from lisard-eye.core import LisardEyeCore
 
 lisardeye = LisardEyeCore()
 lisardeye.do_run()
