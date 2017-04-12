@@ -31,6 +31,7 @@ import syslog
 import argparse
 import signal
 from sys import exit
+import lisard
 # from picamera import PiCamera, Color
 
 

@@ -26,8 +26,9 @@ One of the goals of this project is to be as simple and understandable as is rea
 
 ## Links
 * [LISARD framework spec](https://github.com/dogoncouch/lisard/blob/master/framework.txt)
-* [LISARD core systems](systems/)
-* [LISARD project miscellany](misc/)
+* [LISARD main library](lisard/)
+* [LISARD eye system](eye/)
+* [LISARD 'modes' input system](modes/)
 * [rsyslog](http://www.rsyslog.com/)
 * [Raspberry Pi Foundation](https://www.raspberrypi.org/)
 * [Raspbian](https://www.raspbian.org/)
