@@ -45,12 +45,13 @@ class LisardCam:
                 raise ValueError('Unrecognized resolution input')
 
         
-        def open_connect(self, user=pi, rhost):
+        def open_connect(self, user=pi, trustkeys=False, rhost):
             self.is_remote = True
             self.client = paramiko.SSHClient()
             ourkey = paramiko.RSAKey.from_private_key_file(self.key_file)
             self.client.load_system_host_keys()
-            # client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+            if trustkeys:
+                client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
             self.client.connect(rhost, username=user, pkey=ourkey)
             self.sftp = self.client.open_sftp()
 
