@@ -36,7 +36,7 @@ class LisardCam:
             """Initialize a LisardCam pi camera object"""
             self.camera = PiCamera()
             self.set_res('fhd')
-            self.annotate = False
+            self.annotate = True
             self.camera.annotate_background = Color('black')
             self.camera.rotation = 270
             self.is_recording = False
@@ -101,10 +101,10 @@ class LisardCam:
         
         
         
-        def start_cam(self):
+        def start_cam(self, filename):
             """Start recording"""
-            ourdatestamp = datetime.now().strftime('%Y-%m-%d-%H%M%S')
-            filename = self.output_dir + '/' + ourdatestamp + '.h264'
+            # ourdatestamp = datetime.now().strftime('%Y-%m-%d-%H%M%S')
+            fullname = self.output_dir + '/' + filename
             self.is_recording = True
             if self.is_remote == True:
                 f = self.sftp.open(filename, 'w')
@@ -116,6 +116,7 @@ class LisardCam:
 
         def stop_cam(self):
             """Stop recording"""
+            self.is_recording = False
             self.camera.stop_recording()
         
         
