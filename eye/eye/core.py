@@ -88,15 +88,15 @@ class LisardEyeCore:
         
             # Set video quality:
             if args.fhd:
-                self.cam.set_red('fhd')
+                self.cam.set_res('fhd')
             elif args.hd:
-                self.cam.set_red('hd')
+                self.cam.set_res('hd')
             elif args.svga:
-                self.cam.set_red('svga')
+                self.cam.set_res('svga')
             elif args.vga:
-                self.cam.set_red('vga')
+                self.cam.set_res('vga')
             else:
-                self.cam.set_red('ld')
+                self.cam.set_res('ld')
 
             if args.no-cam-date:
                 self.cam.annotate = False
@@ -110,7 +110,7 @@ class LisardEyeCore:
             self.cam.stop_cam()
             syslog.syslog(syslog.LOG_INFO,'Video: Stopped: ' + \
                     self.longdatestamp + '.h264')
-            if self.is_remote = True:
+            if self.is_remote:
                 try: self.cam.close_connect()
                 except Exception: pass
         exit(0)
@@ -129,7 +129,7 @@ class LisardEyeCore:
                 syslog.syslog(syslog.LOG_INFO,
                         'Video: Stopped: ' + self.longdatestamp + \
                                 '.h264')
-            if self.is_remote = True:
+            if self.is_remote:
                 try: self.cam.close_connect()
                 except Exception: pass
             exit(0)
