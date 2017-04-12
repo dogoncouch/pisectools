@@ -31,7 +31,8 @@ import subprocess
 import argparse
 import RPi.GPIO as io
 io.setmode(io.BCM)
-from picamera import PiCamera, Color
+import lisard
+# from picamera import PiCamera, Color
 
 
 
@@ -49,10 +50,16 @@ class ModesCore:
                 help="disable camera support")
         parser.add_argument("--cam-date", action="store_true",
                 help="enable datestamp in camera")
-        parser.add_argument("--hd", action="store_true",
+        parser.add_argument("--fhd", action="store_true",
                 help="enable 1080p video")
+        parser.add_argument("--hd", action="store_true",
+                help="enable 720p video")
+        parser.add_argument("--svga", action="store_true",
+                help="enable svga video")
+        parser.add_argument("--vga", action="store_true",
+                help="enable vga video")
         parser.add_argument("--ld", action="store_true",
-                help="enable 400x300 video")
+                help="enable low def video (400x300)")
         parser.add_argument("--no-rec-stop", action="store_true",
                 help="keep recording when jumper is removed")
         args = parser.parse_args()
@@ -60,41 +67,40 @@ class ModesCore:
         
         # Video recording mode setup:
         if not args.no-cam:
-            self.cam_pin = 10
-            io.setup(self.cam_pin, io.IN)
-            self.camera = PiCamera()
-            self.isrecording = False
+            self.cam = lisard.LisardCam()
+            self.is_recording = False
             self.longdatestamp = ''
             self.videopath = '/home/pi/Videos'
+
+            # Set up remote recording
+            if args.remote:
+                self.is_remote = True
+                self.cam.open_connect(remote[0])
         
-            if args.hd:
-                # self.camera.sensor_mode = 1
-                self.camera.resolution = (1920, 1080)
-                self.camera.framerate = 30
-                if args.cam-date: self.camera.annotate_text_size = 25
-            elif args.ld:
-                self.camera.resolution = (400, 300)
-                self.camera.framerate = 15
-                if args.cam-date: self.camera.annotate_text_size = 8
+            # Set video quality:
+            if args.fhd:
+                self.cam.set_res('fhd')
+            elif args.hd:
+                self.cam.set_res('hd')
+            elif args.svga:
+                self.cam.set_res('svga')
+            elif args.vga:
+                self.cam.set_res('vga')
             else:
-                # self.camera.sensor_mode = 5
-                self.camera.resolution = (800, 600)
-                self.camera.framerate = 30
-                if args.cam-date: self.camera.annotate_text_size = 10
-                
-            if args.cam-date:
-                self.camera.annotate_background = Color('black')
-                self.datestamp = ''
-                self.scount = 40
+                self.cam.set_res('ld')
+
+            if args.no-cam-date:
+                self.cam.annotate = False
 
         # Other pin 10 script setup:
         else: self.other10 = False
+
 
         # Radio mode setup:
         self.radio_pin = 22
         io.setup(self.radio_pin, io.IN)
         self.radiostream = 'http://amber.streamguys.com:4860'
-        self.isradio = False
+        self.is_radio = False
         
         # Wifi mode setup:
         self.wifi_pin = 27
@@ -121,19 +127,18 @@ class ModesCore:
     
     def do_stop(self):
         if not args.no-cam:
-            if self.isrecording:
-                self.camera.stop_recording()
-                self.isrecording = False
-                if args.cam-date: self.scount = 40
+            if self.is_recording:
+                self.cam.stop_cam()
+                self.is_recording = False
         elif self.other10:
             subprocess.Popen(['/usr/bin/killall', 'other10.sh'])
             self.other10 = False
-        if self.isradio:
+        if self.is_radio:
             subprocess.Popen(['/usr/bin/killall', 'mpg123'])
-            self.isradio = False
-        if self.iswifi:
+            self.is_radio = False
+        if self.is_wifi:
             subprocess.Popen(['/usr/bin/killall', 'wifi.sh'])
-            self.iswifi = False
+            self.is_wifi = False
 
 
 
@@ -150,63 +155,63 @@ class ModesCore:
             # Video recording mode:
             if not args.no-cam:
                 if io.input(self.cam_pin):
-                    if not self.isrecording:
-                        if args.cam-date:
-                            self.datestamp = \
-                                datetime.now().strftime('%Y-%m-%d-%H%M')
-                            self.camera.annotate_text = self.datestamp
-                            self.scount = 40
-                        self.longdatestamp = \
-                                datetime.now().strftime('%Y-%m-%d-%H%M%S')
-                        self.filename = self.videopath + '/video-' + \
-                                self.longdatestamp + '.h264'
-                        self.camera.start_recording(self.filename)
-                        self.isrecording = True
+                    if not self.is_recording:
+                        self.is_recording = True
+                        hscount = 2400
+                        if not args.no-cam:
+                            self.longdatestamp = \
+                                    datetime.now().strftime('%Y-%m-%d-%H%M%S')
+                            self.cam.start_cam(self.longdatestamp + '.h264')
                     else:
-                        if args.cam-date:
-                            if self.scount == 0:
-                                self.datestamp = \
-                                        datetime.now().strftime('%Y-%m-%d-%H%M')
-                                self.camera.annotate_text = self.datestamp
-                                self.scount = 40
-                            else:
-                                self.scount = self.scount - 1
+                        if hscount == 0:
+                            self.longdatestamp = \
+                                    datetime.now().strftime('%Y-%m-%d-%H%M%S')
+                            self.cam.camera.split_recording(self.longdatestamp + \
+                                    '.h264')
+                        else:
+                            hscount = hscount - 1
+                            
                 else:
-                    if args.no-rec-stop:
-                        if self.isrecording and args.cam-date:
-                            # if args.cam-date:
-                            if self.scount == 0:
-                                self.datestamp = \
-                                        datetime.now().strftime('%Y-%m-%d-%H%M')
-                                self.camera.annotate_text = self.datestamp
-                                self.scount = 40
+                    if self.is_recording:
+                        if args.no-rec-stop:
+                            if hscount == 0:
+                                self.longdatestamp = \
+                                        datetime.now().strftime('%Y-%m-%d-%H%M%S')
+                                self.cam.camera.split_recording(self.longdatestamp + \
+                                        '.h264')
+        
+                                syslog.syslog(syslog.LOG_INFO,
+                                        'Video: Split: ' + self.longdatestamp + \
+                                                '.h264')
+                                hscount = 1200
                             else:
-                                self.scount = self.scount - 1
-                    else:
-                        self.camera.stop_recording()
-                        self.isrecording = False
-                    
+                                hscount = hscount - 1
+                        else:
+                            self.cam.stop_cam()
+                            self.is_recording = False
 
             else:
-                subprocess.Popen(['/home/pi/bin/other10.sh'])
-                self.other10 = True
+                # Other pin 10 (camera is disabled)
+                if io.input(self.cam_pin):
+                    subprocess.Popen(['/home/pi/bin/other10.sh'])
+                    self.other10 = True
                     
 
 
             # Radio mode:
             if io.input(self.radio_pin):
-                if not self.isradio:
+                if not self.is_radio:
                     subprocess.Popen(['/usr/bin/amixer', 'cset', 'numid',
                         '3', '1'])
                     subprocess.Popen(['/usr/bin/mpg123 ', self.radiostream])
-                    self.isradio = True
+                    self.is_radio = True
 
 
             # Wifi mode:
             if io.input(self.wifi_pin):
-                if not self.iswifi:
+                if not self.is_wifi:
                     subprocess.Popen(['/home/pi/bin/wifi.sh'])
-                    self.iswifi = True
+                    self.is_wifi = True
 
 
             # Stop mode:

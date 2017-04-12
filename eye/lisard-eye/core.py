@@ -68,7 +68,7 @@ class LisardEyeCore:
         parser.add_argument("--svga", action="store_true",
                 help="enable svga video (800x600)")
         parser.add_argument("--vga", action="store_true",
-                help="enable svga video (640x480)")
+                help="enable vga video (640x480)")
         parser.add_argument("--ld", action="store_true",
                 help="enable low def video (400x300)")
         args = parser.parse_args()
@@ -163,6 +163,7 @@ class LisardEyeCore:
                         syslog.syslog(syslog.LOG_INFO,
                                 'Video: Split: ' + self.longdatestamp + \
                                         '.h264')
+                        hscount = 1200
                     else:
                         hscount = hscount - 1
 
