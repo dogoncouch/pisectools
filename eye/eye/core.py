@@ -48,7 +48,7 @@ class LisardEyeCore:
         signal.signal(signal.SIGTERM, self.sigterm_handler)
 
         # Basic settings:
-        self.ismotion = False
+        self.is_motion = False
         self.is_remote = False
         self.pir_pin = 18
         io.setup(self.pir_pin, io.IN)
@@ -81,11 +81,12 @@ class LisardEyeCore:
             self.longdatestamp = ''
             self.videopath = '/home/pi/Videos'
 
+            # Set up remote recording
             if args.remote:
-                # To Do
                 self.is_remote = True
                 self.cam.open_connect(remote[0])
         
+            # Set video quality:
             if args.fhd:
                 self.cam.set_red('fhd')
             elif args.hd:
@@ -139,26 +140,42 @@ class LisardEyeCore:
         """Monitors motion sensor and records video (optional)"""
         while True:
             if io.input(self.pir_pin):
-                if not self.ismotion:
+                if not self.is_motion:
+                    # Start recording:
                     syslog.syslog(syslog.LOG_INFO, 'PIR: Motion detected')
-                    self.ismotion = True
+                    self.is_motion = True
+                    hscount = 1200
                     if not args.no-cam:
                         self.longdatestamp = \
                                 datetime.now().strftime('%Y-%m-%d-%H%M%S')
                         self.cam.start_cam(self.longdatestamp + '.h264')
-
                         syslog.syslog(syslog.LOG_INFO,
                                 'Video: Started: ' + self.longdatestamp + \
                                         '.h264')
+                else:
+                    # Split recording every 20 minutes:
+                    if hscount == 0:
+                        self.longdatestamp = \
+                                datetime.now().strftime('%Y-%m-%d-%H%M%S')
+                        self.cam.camera.split_recording(self.longdatestamp + \
+                                '.h264')
+
+                        syslog.syslog(syslog.LOG_INFO,
+                                'Video: Split: ' + self.longdatestamp + \
+                                        '.h264')
+                    else:
+                        hscount = hscount - 1
+
             else:
-                if self.ismotion:
+                if self.is_motion:
+                    # Stop recording:
                     syslog.syslog(syslog.LOG_INFO, 'PIR: Motion stopped')
                     if not args.no-cam:
                         self.cam.stop_cam()
                         syslog.syslog(syslog.LOG_INFO,
                                 'Video: Stopped: ' + self.longdatestamp + \
                                         '.h264')
-                    self.ismotion = False
+                    self.is_motion = False
             sleep(0.5)
 
 
