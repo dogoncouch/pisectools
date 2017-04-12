@@ -1,6 +1,6 @@
 # LISARD eye system
 ## Goals
-The goal of the eye system is to record events and pass them on to the central system for analyzation. Motion detector events are recording and passed on using syslog, and optional video is recorded remotely with sftp.
+The goal of the eye system is to record events and pass them on to the central system for analyzation. Motion detector events are recorded and passed on using syslog, and optional video is recorded remotely with sftp.
 
 ## Hardware
 The LISARD eye system was developed on Raspberry Pi hardware using a passive infrared motion sensor, and a Raspberry Pi camera. The camera is optional; running the eye module with the --no-cam option disables camera support.
