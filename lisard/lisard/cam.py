@@ -38,12 +38,12 @@ class LisardCam:
         self.set_res('fhd')
         self.annotate = True
         self.camera.annotate_background = Color('black')
-        self.camera.rotation = 270
+        self.camera.rotation = 0
         self.is_recording = False
         self.is_remote = False
         self.sftp = None
         self.key_file = '/home/pi/.ssh/id_rsa'
-        self.output_dir = '/home/pi/Videos'
+        self.output_dir = '/home/lisard/Videos'
 
     
     
@@ -74,14 +74,15 @@ class LisardCam:
 
     
     
-    def open_connect(self, rhost, user='pi', trustkeys=False):
+    def open_connect(self, rhost, user='lisard', keyfile='/home/pi/.ssh/id_rsa',
+            hostfile='/home/pi/.ssh/known_hosts', trustkeys=False):
         """Open an sftp connection for recording"""
         self.is_remote = True
         self.client = paramiko.SSHClient()
-        ourkey = paramiko.RSAKey.from_private_key_file(self.key_file)
-        self.client.load_system_host_keys()
+        ourkey = paramiko.RSAKey.from_private_key_file(keyfile)
+        self.client.load_host_keys(filename=hostfile)
         if trustkeys:
-            client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+            self.client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         self.client.connect(rhost, username=user, pkey=ourkey)
         self.sftp = self.client.open_sftp()
 
@@ -114,7 +115,7 @@ class LisardCam:
             tstamp = threading.Thread(name='background',
                     target=self.time_stamp)
             tstamp.start()
-        self.camera.start_recording(f)
+        self.camera.start_recording(f, format='h264')
 
     def split_cam(self, filename):
         fullname = self.output_dir + '/' + filename

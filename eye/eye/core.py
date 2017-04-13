@@ -59,6 +59,8 @@ class LisardEyeCore:
         parser = argparse.ArgumentParser()
         parser.add_argument("--remote", action="store",
                 help="set remote host for video files")
+        parser.add_argument("--trusthostkeys", action="store_true",
+                help="auto-add remote host keys (use with caution")
         parser.add_argument("--nocam", action="store_true",
                 help="disable camera support")
         parser.add_argument("--nocamdate", action="store_true",
@@ -72,7 +74,7 @@ class LisardEyeCore:
         parser.add_argument("--vga", action="store_true",
                 help="enable vga video (640x480)")
         parser.add_argument("--ld", action="store_true",
-                help="enable low def video (400x300)")
+                help="enable low def video (400x300) (default)")
         self.args = parser.parse_args()
         
 
@@ -86,7 +88,10 @@ class LisardEyeCore:
             # Set up remote recording
             if self.args.remote:
                 self.is_remote = True
-                self.cam.open_connect(remote[0])
+                if self.args.trusthostkeys:
+                    self.cam.open_connect(self.args.remote, trustkeys=True)
+                else:
+                    self.cam.open_connect(self.args.remote)
         
             # Set video quality:
             if self.args.fhd:
