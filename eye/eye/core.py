@@ -99,8 +99,8 @@ class LisardEyeCore:
             else:
                 self.cam.set_res('ld')
 
-            if self.args.nocamdate:
-                self.cam.annotate = False
+            if not self.args.nocamdate:
+                self.cam.annotate = True
 
 
 
