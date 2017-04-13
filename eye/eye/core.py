@@ -163,9 +163,7 @@ class LisardEyeCore:
                                 datetime.now().strftime('%Y-%m-%d-%H%M%S')
                         self.file_name = socket.gethostname() + '-' + \
                                 self.long_date_stamp + '.h264'
-                        # To Do: fix this for remote recording:
-                        # Separate function in cam
-                        self.cam.camera.split_recording(self.file_name)
+                        self.cam.split_cam(self.file_name)
                         syslog.syslog(syslog.LOG_INFO,
                                 'Video: Split: ' + self.file_name)
                         hscount = 1200

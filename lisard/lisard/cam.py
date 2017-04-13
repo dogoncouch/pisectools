@@ -106,15 +106,23 @@ class LisardCam:
         # ourdatestamp = datetime.now().strftime('%Y-%m-%d-%H%M%S')
         fullname = self.output_dir + '/' + filename
         self.is_recording = True
-        if self.is_remote == True:
+        if self.is_remote:
             f = self.sftp.open(fullname, 'w')
         else:
             f = fullname
-        if self.annotate == True:
+        if self.annotate:
             tstamp = threading.Thread(name='background',
                     target=self.time_stamp)
             tstamp.start()
         self.camera.start_recording(f)
+
+    def split_cam(self, filename):
+        fullname = self.output_dir + '/' + filename
+        if self.is_remote:
+            f = self.sftp.open(fullname, 'w')
+        else:
+            f = fullname
+        self.camera.split_recording(f)
 
     def stop_cam(self):
         """Stop recording"""
