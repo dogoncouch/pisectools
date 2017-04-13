@@ -31,7 +31,8 @@ import syslog
 import argparse
 import signal
 from sys import exit
-import lisard
+from lisard import cam
+# import lisard
 # from picamera import PiCamera, Color
 
 
@@ -57,9 +58,9 @@ class LisardEyeCore:
         parser = argparse.ArgumentParser()
         parser.add_argument("--remote", action="store",
                 help="set remote host for video files")
-        parser.add_argument("--no-cam", action="store_true",
+        parser.add_argument("--nocam", action="store_true",
                 help="disable camera support")
-        parser.add_argument("--no-cam-date", action="store_true",
+        parser.add_argument("--nocamdate", action="store_true",
                 help="disable datestamp in camera")
         parser.add_argument("--fhd", action="store_true",
                 help="enable 1080p video")
@@ -71,34 +72,34 @@ class LisardEyeCore:
                 help="enable vga video (640x480)")
         parser.add_argument("--ld", action="store_true",
                 help="enable low def video (400x300)")
-        args = parser.parse_args()
+        self.args = parser.parse_args()
         
 
         # Video recording mode setup:
-        if not args.no-cam:
-            self.cam = lisard.LisardCam()
+        if not self.args.nocam:
+            self.cam = cam.LisardCam()
             self.isrecording = False
             self.longdatestamp = ''
             self.videopath = '/home/pi/Videos'
 
             # Set up remote recording
-            if args.remote:
+            if self.args.remote:
                 self.is_remote = True
                 self.cam.open_connect(remote[0])
         
             # Set video quality:
-            if args.fhd:
+            if self.args.fhd:
                 self.cam.set_res('fhd')
-            elif args.hd:
+            elif self.args.hd:
                 self.cam.set_res('hd')
-            elif args.svga:
+            elif self.args.svga:
                 self.cam.set_res('svga')
-            elif args.vga:
+            elif self.args.vga:
                 self.cam.set_res('vga')
             else:
                 self.cam.set_res('ld')
 
-            if args.no-cam-date:
+            if self.args.nocamdate:
                 self.cam.annotate = False
 
 
@@ -145,7 +146,7 @@ class LisardEyeCore:
                     syslog.syslog(syslog.LOG_INFO, 'PIR: Motion detected')
                     self.is_motion = True
                     hscount = 1200
-                    if not args.no-cam:
+                    if not self.args.nocam:
                         self.longdatestamp = \
                                 datetime.now().strftime('%Y-%m-%d-%H%M%S')
                         self.cam.start_cam(self.longdatestamp + '.h264')
@@ -171,7 +172,7 @@ class LisardEyeCore:
                 if self.is_motion:
                     # Stop recording:
                     syslog.syslog(syslog.LOG_INFO, 'PIR: Motion stopped')
-                    if not args.no-cam:
+                    if not self.args.nocam:
                         self.cam.stop_cam()
                         syslog.syslog(syslog.LOG_INFO,
                                 'Video: Stopped: ' + self.longdatestamp + \
