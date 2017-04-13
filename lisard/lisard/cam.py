@@ -113,6 +113,7 @@ class LisardCam:
         if self.annotate == True:
             tstamp = threading.Thread(name='background',
                     target=self.time_stamp)
+            tstamp.start()
         self.camera.start_recording(f)
 
     def stop_cam(self):
