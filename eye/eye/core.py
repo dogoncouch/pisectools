@@ -31,6 +31,7 @@ import syslog
 import argparse
 import signal
 from sys import exit
+import socket
 from lisard import cam
 # import lisard
 # from picamera import PiCamera, Color
@@ -110,7 +111,9 @@ class LisardEyeCore:
         if self.is_recording:
             self.cam.stop_cam()
             syslog.syslog(syslog.LOG_INFO,'Video: Stopped: ' + \
-                    self.long_date_stamp + '.h264')
+                    self.file_name)
+            # syslog.syslog(syslog.LOG_INFO,'Video: Stopped: ' + \
+            #         self.long_date_stamp + '.h264')
             if self.is_remote:
                 try: self.cam.close_connect()
                 except Exception: pass
@@ -128,8 +131,7 @@ class LisardEyeCore:
             if self.is_recording:
                 self.cam.stop_cam()
                 syslog.syslog(syslog.LOG_INFO,
-                        'Video: Stopped: ' + self.long_date_stamp + \
-                                '.h264')
+                        'Video: Stopped: ' + self.file_name)
             if self.is_remote:
                 try: self.cam.close_connect()
                 except Exception: pass
@@ -149,21 +151,23 @@ class LisardEyeCore:
                     if not self.args.nocam:
                         self.long_date_stamp = \
                                 datetime.now().strftime('%Y-%m-%d-%H%M%S')
-                        self.cam.start_cam(self.long_date_stamp + '.h264')
+                        self.file_name = socket.gethostname() + \ '-' + \
+                                self.long_date_stamp + '.h264'
+                        self.cam.start_cam(self.file_name)
                         syslog.syslog(syslog.LOG_INFO,
-                                'Video: Started: ' + self.long_date_stamp + \
-                                        '.h264')
+                                'Video: Started: ' + self.file_name)
                 else:
                     # Split recording every 20 minutes:
                     if hscount == 0:
                         self.long_date_stamp = \
                                 datetime.now().strftime('%Y-%m-%d-%H%M%S')
-                        self.cam.camera.split_recording(self.long_date_stamp + \
-                                '.h264')
-
+                        self.file_name = socket.gethostname() + \ '-' + \
+                                self.long_date_stamp + '.h264'
+                        # To Do: fix this for remote recording:
+                        # Separate function in cam
+                        self.cam.camera.split_recording(self.file_name)
                         syslog.syslog(syslog.LOG_INFO,
-                                'Video: Split: ' + self.long_date_stamp + \
-                                        '.h264')
+                                'Video: Split: ' + self.file_name)
                         hscount = 1200
                     else:
                         hscount = hscount - 1
@@ -175,8 +179,7 @@ class LisardEyeCore:
                     if not self.args.nocam:
                         self.cam.stop_cam()
                         syslog.syslog(syslog.LOG_INFO,
-                                'Video: Stopped: ' + self.long_date_stamp + \
-                                        '.h264')
+                                'Video: Stopped: ' + self.file_name)
                     self.is_motion = False
             sleep(0.5)
 
