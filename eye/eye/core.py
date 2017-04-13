@@ -151,7 +151,7 @@ class LisardEyeCore:
                     if not self.args.nocam:
                         self.long_date_stamp = \
                                 datetime.now().strftime('%Y-%m-%d-%H%M%S')
-                        self.file_name = socket.gethostname() + \ '-' + \
+                        self.file_name = socket.gethostname() + '-' + \
                                 self.long_date_stamp + '.h264'
                         self.cam.start_cam(self.file_name)
                         syslog.syslog(syslog.LOG_INFO,
@@ -161,7 +161,7 @@ class LisardEyeCore:
                     if hscount == 0:
                         self.long_date_stamp = \
                                 datetime.now().strftime('%Y-%m-%d-%H%M%S')
-                        self.file_name = socket.gethostname() + \ '-' + \
+                        self.file_name = socket.gethostname() + '-' + \
                                 self.long_date_stamp + '.h264'
                         # To Do: fix this for remote recording:
                         # Separate function in cam
