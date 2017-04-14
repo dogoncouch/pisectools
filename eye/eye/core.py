@@ -157,8 +157,8 @@ class LisardEyeCore:
                     if not self.args.nocam:
                         self.long_date_stamp = \
                                 datetime.now().strftime('%Y-%m-%d-%H%M%S')
-                        self.file_name = socket.gethostname() + '-' + \
-                                self.long_date_stamp + '.h264'
+                        self.file_name = self.long_date_stamp + '-' + \
+                                socket.gethostname() + '.h264'
                         self.cam.start_cam(self.file_name)
                         syslog.syslog(syslog.LOG_INFO,
                                 'Video: Started: ' + self.file_name)
@@ -167,8 +167,8 @@ class LisardEyeCore:
                     if hscount == 0:
                         self.long_date_stamp = \
                                 datetime.now().strftime('%Y-%m-%d-%H%M%S')
-                        self.file_name = socket.gethostname() + '-' + \
-                                self.long_date_stamp + '.h264'
+                        self.file_name = self.long_date_stamp + '-' + \
+                                socket.gethostname() + '.h264'
                         self.cam.split_cam(self.file_name)
                         syslog.syslog(syslog.LOG_INFO,
                                 'Video: Split: ' + self.file_name)
