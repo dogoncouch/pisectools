@@ -128,6 +128,7 @@ class LisardEyeCore:
 
     def do_run(self):
         """Runs the watch job"""
+        syslog.syslog(syslog.LOG_NOTICE, 'LISARD eye online.')
         try:
             self.do_watch()
         except KeyboardInterrupt:
