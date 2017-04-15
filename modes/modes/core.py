@@ -46,9 +46,9 @@ class ModesCore:
         
         # CLI options:
         parser = argparse.ArgumentParser()
-        parser.add_argument("--no-cam", action="store_true",
+        parser.add_argument("--nocam", action="store_true",
                 help="disable camera support")
-        parser.add_argument("--cam-date", action="store_true",
+        parser.add_argument("--camdate", action="store_true",
                 help="enable datestamp in camera")
         parser.add_argument("--fhd", action="store_true",
                 help="enable 1080p video")
@@ -60,36 +60,36 @@ class ModesCore:
                 help="enable vga video")
         parser.add_argument("--ld", action="store_true",
                 help="enable low def video (400x300)")
-        parser.add_argument("--no-rec-stop", action="store_true",
+        parser.add_argument("--norecstop", action="store_true",
                 help="keep recording when jumper is removed")
-        args = parser.parse_args()
+        self.args = parser.parse_args()
         
         
         # Video recording mode setup:
-        if not args.no-cam:
+        if not self.args.nocam:
             self.cam = lisard.LisardCam()
             self.is_recording = False
             self.longdatestamp = ''
             self.videopath = '/home/pi/Videos'
 
             # Set up remote recording
-            if args.remote:
+            if self.args.remote:
                 self.is_remote = True
                 self.cam.open_connect(remote[0])
         
             # Set video quality:
-            if args.fhd:
+            if self.args.fhd:
                 self.cam.set_res('fhd')
-            elif args.hd:
+            elif self.args.hd:
                 self.cam.set_res('hd')
-            elif args.svga:
+            elif self.args.svga:
                 self.cam.set_res('svga')
-            elif args.vga:
+            elif self.args.vga:
                 self.cam.set_res('vga')
             else:
                 self.cam.set_res('ld')
 
-            if args.no-cam-date:
+            if self.args.nocamdate:
                 self.cam.annotate = False
 
         # Other pin 10 script setup:
@@ -126,7 +126,7 @@ class ModesCore:
     
     
     def do_stop(self):
-        if not args.no-cam:
+        if not self.args.nocam:
             if self.is_recording:
                 self.cam.stop_cam()
                 self.is_recording = False
@@ -153,12 +153,12 @@ class ModesCore:
         while True:
             
             # Video recording mode:
-            if not args.no-cam:
+            if not self.args.nocam:
                 if io.input(self.cam_pin):
                     if not self.is_recording:
                         self.is_recording = True
                         hscount = 2400
-                        if not args.no-cam:
+                        if not self.args.nocam:
                             self.longdatestamp = \
                                     datetime.now().strftime('%Y-%m-%d-%H%M%S')
                             self.cam.start_cam(self.longdatestamp + '.h264')
@@ -173,7 +173,7 @@ class ModesCore:
                             
                 else:
                     if self.is_recording:
-                        if args.no-rec-stop:
+                        if self.args.norecstop:
                             if hscount == 0:
                                 self.longdatestamp = \
                                         datetime.now().strftime('%Y-%m-%d-%H%M%S')
