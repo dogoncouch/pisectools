@@ -131,16 +131,16 @@ class LisardEyeCore:
         syslog.syslog(syslog.LOG_NOTICE, 'LISARD eye online.')
         try:
             self.do_watch()
-        except KeyboardInterrupt:
-            syslog.syslog(syslog.LOG_NOTICE,
-                    'Received KeyboardInterrupt. Exiting')
-            if self.is_recording:
-                self.cam.stop_cam()
-                syslog.syslog(syslog.LOG_INFO,
-                        'Video: Stopped: ' + self.file_name)
-            if self.is_remote:
-                try: self.cam.close_connect()
-                except Exception: pass
+        # except KeyboardInterrupt:
+        #     syslog.syslog(syslog.LOG_NOTICE,
+        #             'Received KeyboardInterrupt. Exiting')
+        #     if self.is_recording:
+        #         self.cam.stop_cam()
+        #         syslog.syslog(syslog.LOG_INFO,
+        #                 'Video: Stopped: ' + self.file_name)
+        #     if self.is_remote:
+        #         try: self.cam.close_connect()
+        #         except Exception: pass
         except Exception:
             syslog.syslog(syslog.LOG_NOTICE,
                     'Received error. Exiting')
