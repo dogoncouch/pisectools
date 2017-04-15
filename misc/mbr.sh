@@ -22,5 +22,5 @@
 #_OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #_SOFTWARE.
 
-/usr/bin/amixer cset numid 3 1
+/usr/bin/amixer cset numid=3 1
 /usr/bin/mpg123 http://wmbr.org:8000/hi
