@@ -9,6 +9,6 @@ The LISARD modes system was developed for Raspberry Pi hardware. It should work 
 The lisard module is required, and is also in the repo. Camera support requires the picamera module, and remote recording support requires the paramiko module (python-paramiko).
 
 ## Usability
-This project is pre-alpha. Documentation is incomplete. Check back in a week or two.
+This project is pre-alpha. Documentation is incomplete.
 
 (c) 2017 Dan Persons ([dpersonsdev@gmail.com](mailto:dpersonsdev@gmail.com))
