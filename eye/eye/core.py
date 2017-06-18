@@ -32,7 +32,6 @@ import argparse
 import signal
 from sys import exit
 import socket
-from lisard import cam
 # import lisard
 # from picamera import PiCamera, Color
 
@@ -65,6 +64,8 @@ class LisardEyeCore:
                 help="disable camera support")
         parser.add_argument("--nocamdate", action="store_true",
                 help="disable datestamp in camera")
+        parser.add_argument("--rotation", action="store",
+                help="set camera rotation")
         parser.add_argument("--fhd", action="store_true",
                 help="enable 1080p video")
         parser.add_argument("--hd", action="store_true",
@@ -80,6 +81,8 @@ class LisardEyeCore:
 
         # Video recording mode setup:
         if not self.args.nocam:
+            from lisard import cam
+            
             self.cam = cam.LisardCam()
             self.is_recording = False
             self.long_date_stamp = ''
@@ -107,6 +110,10 @@ class LisardEyeCore:
 
             if not self.args.nocamdate:
                 self.cam.annotate = True
+
+            if self.args.rotation:
+                self.cam.camera.rotation = self.args.rotation
+                # To Do: make this more elegant
 
 
 
