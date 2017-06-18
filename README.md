@@ -7,7 +7,7 @@ LISARD is a security intelligence framework. It is currently in the early stages
 * Resilient
 
 ## Logging
-LISARD relies heavily on the syslog daemon for its sense of awareness and memory. One of the goals is to make use of syslog's robust set of features, and not reinvent the wheel. We are currently using rsyslog for logging.
+LISARD relies heavily on the syslog daemon for its sense of awareness and memory. One of the goals is to make use of syslog's robust set of features, and not reinvent the wheel. We are currently using rsyslog for logging, but plan on adding support for syslog-ng.
 
 ## Hardware
 LISARD is built on Raspberry Pi hardware. Here are a few of the reasons:
@@ -25,14 +25,23 @@ LISARD currently uses the Raspbian operating system, which is based on Debian Li
 One of the goals of this project is to be as simple and understandable as is reasonable.
 
 ## Links
-* [LISARD framework spec](https://github.com/dogoncouch/lisard/blob/master/framework.txt)
-* [LISARD main library](lisard/)
+
+### Working Software
+Each has its own README.md.
 * [LISARD eye system](eye/)
 * [LISARD 'modes' input system](modes/)
+
+### Libraries
+* [LISARD main library](lisard/)
+
+### Project Information
+* [LISARD framework spec](https://github.com/dogoncouch/lisard/blob/master/framework.txt)
+* [Software License](https://github.com/dogoncouch/lisard/blob/master/LICENSE)
+
+### External Resources
 * [rsyslog](http://www.rsyslog.com/)
 * [Raspberry Pi Foundation](https://www.raspberrypi.org/)
 * [Raspbian](https://www.raspbian.org/)
 * [Debian](https://www.debian.org/)
-* [Software License](https://github.com/dogoncouch/lisard/blob/master/LICENSE)
 
 (c) 2017 Dan Persons ([dpersonsdev@gmail.com](mailto:dpersonsdev@gmail.com))
