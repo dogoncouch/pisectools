@@ -26,7 +26,7 @@
 from time import sleep, strftime
 from datetime import datetime
 from picamera import PiCamera, Color
-import paramiko
+# import paramiko
 import threading
 
 
@@ -77,6 +77,10 @@ class LisardCam:
     def open_connect(self, rhost, user='lisard', keyfile='/home/pi/.ssh/id_rsa',
             hostfile='/home/pi/.ssh/known_hosts', trustkeys=False):
         """Open an sftp connection for recording"""
+        try:
+            import paramiko
+        except Exception:
+            pass
         self.is_remote = True
         self.client = paramiko.SSHClient()
         ourkey = paramiko.RSAKey.from_private_key_file(keyfile)
