@@ -9,8 +9,22 @@ The LISARD modes system was developed for Raspberry Pi hardware. It should work 
 The lisard module is required, and is also in the repo. Camera support requires the picamera module, and remote recording support requires the paramiko module (python-paramiko).
 
 ## Usage
+
 ```
-./modes.py -h
+usage: modes.py [-h] [--nocam] [--camdate] [--rotation ROTATION] [--fhd]
+                [--hd] [--svga] [--vga] [--ld] [--norecstop]
+
+optional arguments:
+  -h, --help           show this help message and exit
+  --nocam              disable camera support
+  --camdate            enable datestamp in camera
+  --rotation ROTATION  set camera rotation
+  --fhd                enable 1080p video
+  --hd                 enable 720p video
+  --svga               enable svga video
+  --vga                enable vga video
+  --ld                 enable low def video (400x300)
+  --norecstop          keep recording when jumper is removed
 ```
 
 Connect GPIO pins to 3.3v power to communicate. Here is the default setup:

@@ -9,7 +9,6 @@ The LISARD eye system was developed on Raspberry Pi hardware using a passive inf
 The lisard module is required, and is also in this repo. Camera support requires the picamera module, and remote recording support requires the paramiko module (python-paramiko).
 
 ## Usage
-`./eye.py` should be executed from this directory (`eye/` in the repository).
 
 ```
 usage: eye.py [-h] [--remote REMOTE] [--trusthostkeys] [--nocam] [--nocamdate]
