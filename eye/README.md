@@ -28,7 +28,7 @@ optional arguments:
   --ld                 enable low def video (400x300) (default)
 ```
 
-`3.3v` volts on GPIO pin 18 (from a motion sensor) turns the camera on. Camera turns off when the voltage stops.
+`3.3v` volts on GPIO pin 18 (from a motion sensor) turns the camera on and creates a syslog event. Camera turns off (with another syslog event) when the voltage stops.
 
 ## Usability
 This project is pre-alpha. Documentation is incomplete.
