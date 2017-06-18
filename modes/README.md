@@ -8,6 +8,19 @@ The LISARD modes system was developed for Raspberry Pi hardware. It should work 
 ## Required modules
 The lisard module is required, and is also in the repo. Camera support requires the picamera module, and remote recording support requires the paramiko module (python-paramiko).
 
+## Usage
+```
+./modes.py -h
+```
+
+Connect GPIO pins to 3.3v power to communicate. Here is the default setup:
+- Pin 10: Record video (stops when disconnected)
+- Pin 22: start playing college radio
+- Pin 27: execute wifi script
+- Pin 2: Stop everything
+
+These pins are all reachable with jumpers from nearby 3.3v power pins.
+
 ## Usability
 This project is pre-alpha. Documentation is incomplete.
 

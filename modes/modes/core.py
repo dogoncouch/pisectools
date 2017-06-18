@@ -31,7 +31,7 @@ import subprocess
 import argparse
 import RPi.GPIO as io
 io.setmode(io.BCM)
-import lisard
+# import lisard
 # from picamera import PiCamera, Color
 
 
@@ -50,6 +50,8 @@ class ModesCore:
                 help="disable camera support")
         parser.add_argument("--camdate", action="store_true",
                 help="enable datestamp in camera")
+        parser.add_argument("--rotation", action="store",
+                help="set camera rotation")
         parser.add_argument("--fhd", action="store_true",
                 help="enable 1080p video")
         parser.add_argument("--hd", action="store_true",
@@ -67,10 +69,14 @@ class ModesCore:
         
         # Video recording mode setup:
         if not self.args.nocam:
+            import lisard
+
             self.cam = lisard.LisardCam()
             self.is_recording = False
             self.longdatestamp = ''
             self.videopath = '/home/pi/Videos'
+            if self.args.rotation:
+                self.cam.camera.rotation = self.args.rotation
 
             # Set up remote recording
             if self.args.remote:
