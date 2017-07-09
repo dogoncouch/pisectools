@@ -35,7 +35,7 @@ Each has its own README.md.
 * [LISARD main library](lisard/)
 
 ### Project Information
-* [LISARD framework spec](https://github.com/dogoncouch/lisard/blob/master/framework.txt)
+* [LISARD framework spec](https://github.com/dogoncouch/lisard/blob/master/doc/framework.txt)
 * [Software License](https://github.com/dogoncouch/lisard/blob/master/LICENSE)
 
 ### External Resources
