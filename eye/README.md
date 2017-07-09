@@ -28,7 +28,7 @@ optional arguments:
   --ld                 enable low def video (400x300) (default)
 ```
 
-`3.3v` volts on GPIO pin 18 (from a motion sensor) turns the camera on and creates a syslog event in the `local2` facility, with severity `info`. Camera turns off (with another syslog event) when the voltage stops. Can also be used for door sensors. Notices about the program starting and stopping are sent to the same facility, with `notice` priority.
+`3.3v` volts on GPIO pin 18 (from a motion sensor) turns the camera on and creates a syslog event in the `local2` facility, with severity `info`. Camera turns off (with another syslog event) when the voltage stops. Can also be used for door sensors. Notices about the program starting and stopping are sent to the same facility, with `notice` severity.
 
 ## Usability
 This project is pre-alpha. Documentation is incomplete.
