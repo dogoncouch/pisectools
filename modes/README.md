@@ -29,9 +29,10 @@ optional arguments:
 
 Connect GPIO pins to 3.3v power to communicate. Here is the default setup:
 - Pin 10: Record video (stops when disconnected)
-- Pin 22: start playing college radio
-- Pin 27: execute wifi script
-- Pin 2: Stop everything
+- Pin 22: Start playing college radio
+- Pin 27: Execute wifi script at `/usr/bin/pi/wifi.sh`
+- Pin 2:  Stop everything
+- Pin 24: Shut down
 
 These pins are all reachable with jumpers from nearby 3.3v power pins.
 
