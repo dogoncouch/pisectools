@@ -19,6 +19,7 @@ optional arguments:
   --remote REMOTE      set remote host for video files
   --trusthostkeys      auto-add remote host keys (use with caution
   --nocam              disable camera support
+  --fullcam            enable non-stop recording
   --nocamdate          disable datestamp in camera
   --rotation ROTATION  set camera rotation
   --fhd                enable 1080p video

@@ -63,7 +63,7 @@ class LisardEyeCore:
         parser.add_argument("--nocam", action="store_true",
                 help="disable camera support")
         parser.add_argument("--fullcam", action="store_true",
-                help="disable camera support")
+                help="enable non-stop recording")
         parser.add_argument("--nocamdate", action="store_true",
                 help="disable datestamp in camera")
         parser.add_argument("--rotation", action="store",
