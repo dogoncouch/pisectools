@@ -59,7 +59,7 @@ class LisardEyeCore:
         parser.add_argument("--remote", action="store",
                 help="set remote host for video files")
         parser.add_argument("--trusthostkeys", action="store_true",
-                help="auto-add remote host keys (use with caution")
+                help="auto-add remote host keys (use with caution)")
         parser.add_argument("--nocam", action="store_true",
                 help="disable camera support")
         parser.add_argument("--fullcam", action="store_true",
