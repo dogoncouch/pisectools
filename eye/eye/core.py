@@ -169,6 +169,7 @@ class LisardEyeCore:
 
         if self.args.fullcam:
             self.args.nocam = True
+            hscount = 1200
             self.long_date_stamp = \
                     datetime.now().strftime('%Y-%m-%d-%H%M%S')
             self.file_name = self.long_date_stamp + '-' + \
