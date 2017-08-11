@@ -62,6 +62,8 @@ class LisardEyeCore:
                 help="auto-add remote host keys (use with caution")
         parser.add_argument("--nocam", action="store_true",
                 help="disable camera support")
+        parser.add_argument("--fullcam", action="store_true",
+                help="disable camera support")
         parser.add_argument("--nocamdate", action="store_true",
                 help="disable datestamp in camera")
         parser.add_argument("--rotation", action="store",
@@ -164,14 +166,38 @@ class LisardEyeCore:
 
     def do_watch(self):
         """Monitors motion sensor and records video (optional)"""
+
+        if self.args.fullcam:
+            self.args.nocam = True
+            self.long_date_stamp = \
+                    datetime.now().strftime('%Y-%m-%d-%H%M%S')
+            self.file_name = self.long_date_stamp + '-' + \
+                    socket.gethostname() + '.h264'
+            self.cam.start_cam(self.file_name)
+            syslog.syslog(syslog.LOG_INFO,
+                    'Video: Started: ' + self.file_name)
+
         while True:
+            if self.args.fullcam:
+                if hscount == 0:
+                    self.long_date_stamp = \
+                            datetime.now().strftime('%Y-%m-%d-%H%M%S')
+                    self.file_name = self.long_date_stamp + '-' + \
+                            socket.gethostname() + '.h264'
+                    self.cam.split_cam(self.file_name)
+                    syslog.syslog(syslog.LOG_INFO,
+                            'Video: Split: ' + self.file_name)
+                    hscount = 1200
+                else:
+                    hscount = hscount - 1
+
             if io.input(self.pir_pin):
                 if not self.is_motion:
                     # Start recording:
                     syslog.syslog(syslog.LOG_INFO, 'PIR: Motion detected')
                     self.is_motion = True
-                    hscount = 1200
                     if not self.args.nocam:
+                        hscount = 1200
                         self.long_date_stamp = \
                                 datetime.now().strftime('%Y-%m-%d-%H%M%S')
                         self.file_name = self.long_date_stamp + '-' + \
@@ -181,17 +207,18 @@ class LisardEyeCore:
                                 'Video: Started: ' + self.file_name)
                 else:
                     # Split recording every 20 minutes:
-                    if hscount == 0:
-                        self.long_date_stamp = \
-                                datetime.now().strftime('%Y-%m-%d-%H%M%S')
-                        self.file_name = self.long_date_stamp + '-' + \
-                                socket.gethostname() + '.h264'
-                        self.cam.split_cam(self.file_name)
-                        syslog.syslog(syslog.LOG_INFO,
-                                'Video: Split: ' + self.file_name)
-                        hscount = 1200
-                    else:
-                        hscount = hscount - 1
+                    if not self.args.nocam:
+                        if hscount == 0:
+                            self.long_date_stamp = \
+                                    datetime.now().strftime('%Y-%m-%d-%H%M%S')
+                            self.file_name = self.long_date_stamp + '-' + \
+                                    socket.gethostname() + '.h264'
+                            self.cam.split_cam(self.file_name)
+                            syslog.syslog(syslog.LOG_INFO,
+                                    'Video: Split: ' + self.file_name)
+                            hscount = 1200
+                        else:
+                            hscount = hscount - 1
 
             else:
                 if self.is_motion:
