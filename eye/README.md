@@ -29,7 +29,14 @@ optional arguments:
   --ld                 enable low def video (400x300) (default)
 ```
 
-`3.3v` volts on GPIO pin 18 (from a motion sensor) turns the camera on and creates a syslog event in the `local2` facility, with severity `info`. Camera turns off (with another syslog event) when the voltage stops. Can also be used for door sensors. Notices about the program starting and stopping are sent to the same facility, with `notice` severity.
+## Basic function
+`3.3v` volts on GPIO pin 18 (from a motion sensor) creates a motion event. If the camera is not disabled, it also turns the camera on and creates a camera event. Syslog events are created in the `local2` facility, with severity `info`. When the voltage stops, another motion event is created. The camera turns off, if enabled, with another camera event. Can also be used for door sensors. Notices about the program starting and stopping are sent to the same facility, with `notice` severity.
+
+## Syslog
+This system relies heavily on syslog. Gaining a good understanding of how syslog works is essential.
+
+## Remote recording
+Remote recording requires an ssh server with RSA key authentication enabled, and a local RSA key on the Pi that is authorized on the server. This creates a known vulnerability: someone with physical access to the Pi could read the private key from the SD card, and get access to the server. We are considering using DMCrypt and LUKS to encrypt the private key in the future.
 
 ## Usability
 This project is pre-alpha. Documentation is incomplete.
