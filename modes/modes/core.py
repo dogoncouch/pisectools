@@ -64,6 +64,9 @@ class ModesCore:
                 help="enable low def video (400x300, 15fps)")
         parser.add_argument("--norecstop", action="store_true",
                 help="keep recording when jumper is removed")
+        parser.add_argument("--radio", action="store",
+                default="http://amber.streamguys.com:4860",
+                help="set radio stream URL (default WZBC)")
         self.args = parser.parse_args()
         
         
@@ -105,7 +108,6 @@ class ModesCore:
         # Radio mode setup:
         self.radio_pin = 22
         io.setup(self.radio_pin, io.IN)
-        self.radiostream = 'http://amber.streamguys.com:4860'
         self.is_radio = False
         
         # Wifi mode setup:
@@ -141,6 +143,8 @@ class ModesCore:
             self.other10 = False
         if self.is_radio:
             subprocess.Popen(['/usr/bin/killall', 'mpg123'])
+            subprocess.Popen(['/usr/bin/amixer', 'cset',
+                'numid=3', '0'])
             self.is_radio = False
         if self.is_wifi:
             subprocess.Popen(['/usr/bin/killall', 'wifi.sh'])
@@ -207,9 +211,9 @@ class ModesCore:
             # Radio mode:
             if io.input(self.radio_pin):
                 if not self.is_radio:
-                    subprocess.Popen(['/usr/bin/amixer', 'cset', 'numid',
-                        '3', '1'])
-                    subprocess.Popen(['/usr/bin/mpg123 ', self.radiostream])
+                    subprocess.Popen(['/usr/bin/amixer', 'cset',
+                        'numid=3', '1'])
+                    subprocess.Popen(['/usr/bin/mpg123 ', self.args.radio])
                     self.is_radio = True
 
 
