@@ -21,16 +21,16 @@ optional arguments:
   --rotation ROTATION  set camera rotation
   --fhd                enable 1080p video
   --hd                 enable 720p video
-  --svga               enable svga video
-  --vga                enable vga video
-  --ld                 enable low def video (400x300)
+  --svga               enable svga video (800x600)
+  --vga                enable vga video (640x480)
+  --ld                 enable low def video (400x300, 15fps)
   --norecstop          keep recording when jumper is removed
 ```
 
 Connect GPIO pins to 3.3v power to communicate. Here is the default setup:
 - Pin 10: Record video (stops when disconnected)
 - Pin 22: Start playing college radio
-- Pin 27: Execute wifi script at `/usr/bin/pi/wifi.sh`
+- Pin 27: Execute wifi script at `/home/pi/bin/wifi.sh`
 - Pin 2:  Stop everything
 - Pin 24: Shut down
 

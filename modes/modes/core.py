@@ -57,11 +57,11 @@ class ModesCore:
         parser.add_argument("--hd", action="store_true",
                 help="enable 720p video")
         parser.add_argument("--svga", action="store_true",
-                help="enable svga video")
+                help="enable svga video (800x600)")
         parser.add_argument("--vga", action="store_true",
-                help="enable vga video")
+                help="enable vga video (640x480)")
         parser.add_argument("--ld", action="store_true",
-                help="enable low def video (400x300)")
+                help="enable low def video (400x300, 15fps)")
         parser.add_argument("--norecstop", action="store_true",
                 help="keep recording when jumper is removed")
         self.args = parser.parse_args()
