@@ -230,7 +230,7 @@ class LisardEyeCore:
                                     socket.gethostname() + '.h264'
                             self.cam.split_cam(self.file_name)
                             syslog.syslog(syslog.LOG_INFO,
-                                    'Video: Cont: ' + self.file_name))
+                                    'Video: Cont: ' + self.file_name)
                             hscount = 1200
                         else:
                             hscount = hscount - 1
