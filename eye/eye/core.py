@@ -222,7 +222,7 @@ class LisardEyeCore:
                             vlength = vllist[1] + ':' + vllist[2].split('.')[0]
                             syslog.syslog(syslog.LOG_INFO,
                                     'Video: Split: ' + self.file_name + \
-                                            ' length: ' vlength)
+                                            ' length: ' + vlength)
                             # Start new video:
                             self.long_date_stamp = \
                                     videoetime.strftime('%Y-%m-%d-%H%M%S')
