@@ -135,7 +135,7 @@ class LisardEyeCore:
             vlength = vllist[1] + ':' + vllist[2].split('.')[0]
             self.cam.stop_cam()
             syslog.syslog(syslog.LOG_INFO,
-                    'Video: Stopped: ' + self.file_name + \
+                    'Video: Stopped file: ' + self.file_name + \
                             ' length: ' + vlength)
             
             if self.is_remote:
@@ -229,7 +229,7 @@ class LisardEyeCore:
                                 socket.gethostname() + '.h264'
                         self.cam.start_cam(self.file_name)
                         syslog.syslog(syslog.LOG_INFO,
-                                'Video: Started: ' + self.file_name)
+                                'Video: Started file: ' + self.file_name)
                 else:
                     # Split recording every 20 minutes:
                     if not self.args.nocam:
@@ -240,7 +240,7 @@ class LisardEyeCore:
                                     self.videostime).split(':')
                             vlength = vllist[1] + ':' + vllist[2].split('.')[0]
                             syslog.syslog(syslog.LOG_INFO,
-                                    'Video: Split: ' + self.file_name + \
+                                    'Video: Split file: ' + self.file_name + \
                                             ' length: ' + vlength)
                             # Start new video:
                             self.long_date_stamp = \
@@ -250,7 +250,7 @@ class LisardEyeCore:
                                     socket.gethostname() + '.h264'
                             self.cam.split_cam(self.file_name)
                             syslog.syslog(syslog.LOG_INFO,
-                                    'Video: Cont: ' + self.file_name)
+                                    'Video: Cont file: ' + self.file_name)
                             hscount = 1200
                         else:
                             hscount = hscount - 1
@@ -274,7 +274,7 @@ class LisardEyeCore:
                         vlength = vllist[1] + ':' + vllist[2].split('.')[0]
                         self.cam.stop_cam()
                         syslog.syslog(syslog.LOG_INFO,
-                                'Video: Stopped: ' + self.file_name + \
+                                'Video: Stopped file: ' + self.file_name + \
                                         ' length: ' + vlength)
                     self.is_motion = False
             sleep(0.5)
