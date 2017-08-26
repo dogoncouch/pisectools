@@ -51,6 +51,8 @@ class LisardEyeCore:
 
         # Basic settings:
         self.is_motion = False
+        self.motionstime = None
+        self.motionetime = None
         self.is_remote = False
         self.pir_pin = 18
         io.setup(self.pir_pin, io.IN)
@@ -87,6 +89,8 @@ class LisardEyeCore:
             from lisard import cam
             
             self.cam = cam.LisardCam()
+            self.videostime = None
+            self.videoetime = None
             self.is_recording = False
             self.long_date_stamp = ''
             self.video_path = '/home/pi/Videos' # To Do: get from args
@@ -124,11 +128,16 @@ class LisardEyeCore:
         """Exits cleanly in the event of shutdown/sigterm"""
         syslog.syslog(syslog.LOG_NOTICE, 'Received SIGTERM. Exiting')
         if self.is_recording:
+            # Get end time:
+            self.videoetime = datetime.now()
+            vllist = str(self.videoetime - \
+                    self.videostime).split(':')
+            vlength = vllist[1] + ':' + vllist[2].split('.')[0]
             self.cam.stop_cam()
-            syslog.syslog(syslog.LOG_INFO,'Video: Stopped: ' + \
-                    self.file_name)
-            # syslog.syslog(syslog.LOG_INFO,'Video: Stopped: ' + \
-            #         self.long_date_stamp + '.h264')
+            syslog.syslog(syslog.LOG_INFO,
+                    'Video: Stopped: ' + self.file_name + \
+                            ' length: ' + vlength)
+            
             if self.is_remote:
                 try: self.cam.close_connect()
                 except Exception: pass
@@ -171,33 +180,34 @@ class LisardEyeCore:
         if self.args.fullcam:
             self.args.nocam = True
             hscount = 1200
-            videostime = datetime.now()
+            self.videostime = datetime.now()
             self.long_date_stamp = \
-                    videostime.strftime('%Y-%m-%d-%H%M%S')
+                    self.videostime.strftime('%Y-%m-%d-%H%M%S')
             self.file_name = self.long_date_stamp + '-' + \
                     socket.gethostname() + '.h264'
             self.cam.start_cam(self.file_name)
             syslog.syslog(syslog.LOG_INFO,
-                    'Video: Started: ' + self.file_name)
+                    'Video: Started file: ' + self.file_name)
 
         while True:
             if self.args.fullcam:
                 if hscount == 0:
                     # Get end time:
-                    videoetime = datetime.now()
-                    vllist = str(videoetime - videostime).split(':')
+                    selfvideoetime = datetime.now()
+                    vllist = str(self.videoetime - \
+                            self.videostime).split(':')
                     vlength = vllist[1] + ':' + vllist[2].split('.')[0]
                     syslog.syslog(syslog.LOG_INFO,
-                            'Video: Split: ' + self.file_name + \
+                            'Video: Split file: ' + self.file_name + \
                                     ' length: ' + vlength)
                     # Start new video:
                     self.long_date_stamp = \
-                            videoetime.strftime('%Y-%m-%d-%H%M%S')
+                            self.videoetime.strftime('%Y-%m-%d-%H%M%S')
                     self.file_name = self.long_date_stamp + '-' + \
                             socket.gethostname() + '.h264'
                     self.cam.split_cam(self.file_name)
                     syslog.syslog(syslog.LOG_INFO,
-                            'Video: Cont: ' + self.file_name)
+                            'Video: Cont file: ' + self.file_name)
                     hscount = 1200
                 else:
                     hscount = hscount - 1
@@ -205,16 +215,16 @@ class LisardEyeCore:
             if io.input(self.pir_pin):
                 if not self.is_motion:
                     # Start motion event:
-                    motionstime = datetime.now()
+                    self.motionstime = datetime.now()
                     syslog.syslog(syslog.LOG_INFO, 'PIR: Motion detected')
                     self.is_motion = True
 
                     # Start recording
                     if not self.args.nocam:
                         hscount = 1200
-                        videostime = datetime.now()
+                        self.videostime = datetime.now()
                         self.long_date_stamp = \
-                                videostime.strftime('%Y-%m-%d-%H%M%S')
+                                self.videostime.strftime('%Y-%m-%d-%H%M%S')
                         self.file_name = self.long_date_stamp + '-' + \
                                 socket.gethostname() + '.h264'
                         self.cam.start_cam(self.file_name)
@@ -225,15 +235,17 @@ class LisardEyeCore:
                     if not self.args.nocam:
                         if hscount == 0:
                             # Get end time:
-                            videoetime = datetime.now()
-                            vllist = str(videoetime - videostime).split(':')
+                            self.videoetime = datetime.now()
+                            vllist = str(self.videoetime - \
+                                    self.videostime).split(':')
                             vlength = vllist[1] + ':' + vllist[2].split('.')[0]
                             syslog.syslog(syslog.LOG_INFO,
                                     'Video: Split: ' + self.file_name + \
                                             ' length: ' + vlength)
                             # Start new video:
                             self.long_date_stamp = \
-                                    videoetime.strftime('%Y-%m-%d-%H%M%S')
+                                    self.videoetime.strftime(
+                                            '%Y-%m-%d-%H%M%S')
                             self.file_name = self.long_date_stamp + '-' + \
                                     socket.gethostname() + '.h264'
                             self.cam.split_cam(self.file_name)
@@ -246,8 +258,9 @@ class LisardEyeCore:
             else:
                 if self.is_motion:
                     # End motion event:
-                    motionetime = datetime.now()
-                    mllist = str(motionetime - motionstime).split(':')
+                    self.motionetime = datetime.now()
+                    mllist = str(self.motionetime - \
+                            self.motionstime).split(':')
                     mlength = mllist[1] + ':' + mllist[2].split('.')[0]
                     syslog.syslog(syslog.LOG_INFO, 'PIR: Motion stopped ' + \
                             'length: ' + mlength)
@@ -255,8 +268,9 @@ class LisardEyeCore:
                     # Stop recording
                     if not self.args.nocam:
                         # Get end time:
-                        videoetime = datetime.now()
-                        vllist = str(videoetime - videostime).split(':')
+                        self.videoetime = datetime.now()
+                        vllist = str(self.videoetime - \
+                                self.videostime).split(':')
                         vlength = vllist[1] + ':' + vllist[2].split('.')[0]
                         self.cam.stop_cam()
                         syslog.syslog(syslog.LOG_INFO,
