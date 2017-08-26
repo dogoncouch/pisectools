@@ -127,6 +127,7 @@ class LisardCam:
         if self.annotate:
             tstamp = threading.Thread(name='background',
                     target=self.time_stamp)
+            tstamp.daemon = True
             tstamp.start()
         self.camera.start_recording(f, format='h264')
 
