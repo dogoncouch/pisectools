@@ -28,6 +28,8 @@ from datetime import datetime
 from picamera import PiCamera, Color
 # import paramiko
 import threading
+import signal
+from sys import exit
 
 
 class LisardCam:
@@ -45,7 +47,14 @@ class LisardCam:
         self.key_file = '/home/pi/.ssh/id_rsa'
         self.output_dir = '/home/lisard/Videos'
 
-    
+        signal.signal(signal.SIGTERM, self.sigterm_handler)
+
+
+    def sigterm_handler(self, signal, frame):
+        """Exit cleanly on sigterm"""
+        exit(0)
+
+
     
     def set_res(self, res='fhd'):
         """Set pi camera resolution mode"""
