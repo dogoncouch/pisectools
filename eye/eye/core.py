@@ -183,13 +183,21 @@ class LisardEyeCore:
         while True:
             if self.args.fullcam:
                 if hscount == 0:
+                    # Get end time:
+                    videoetime = datetime.now()
+                    vllist = str(videoetime - videostime).split(':')
+                    vlength = vllist[1] + ':' + vllist[2].split('.')[0]
+                    syslog.syslog(syslog.LOG_INFO,
+                            'Video: Split: ' + self.file_name + \
+                                    ' length: ' + vlength)
+                    # Start new video:
                     self.long_date_stamp = \
-                            datetime.now().strftime('%Y-%m-%d-%H%M%S')
+                            videoetime.strftime('%Y-%m-%d-%H%M%S')
                     self.file_name = self.long_date_stamp + '-' + \
                             socket.gethostname() + '.h264'
                     self.cam.split_cam(self.file_name)
                     syslog.syslog(syslog.LOG_INFO,
-                            'Video: Split: ' + self.file_name)
+                            'Video: Cont: ' + self.file_name)
                     hscount = 1200
                 else:
                     hscount = hscount - 1
@@ -238,9 +246,9 @@ class LisardEyeCore:
             else:
                 if self.is_motion:
                     # End motion event:
-                        motionetime = datetime.now()
-                        mllist = str(motionetime - motionstime).split(':')
-                        mlength = mllist[1] + ':' + mllist[2].split('.')[0]
+                    motionetime = datetime.now()
+                    mllist = str(motionetime - motionstime).split(':')
+                    mlength = mllist[1] + ':' + mllist[2].split('.')[0]
                     syslog.syslog(syslog.LOG_INFO, 'PIR: Motion stopped ' + \
                             'length: ' + mlength)
 
