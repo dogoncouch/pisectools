@@ -252,7 +252,7 @@ class LisardEyeCore:
                         vlength = vllist[1] + ':' + vllist[2].split('.')[0]
                         syslog.syslog(syslog.LOG_INFO,
                                 'Video: Split: ' + self.file_name + \
-                                        'length: ' vlength)
+                                        'length: ' + vlength)
                         self.cam.stop_cam()
                         syslog.syslog(syslog.LOG_INFO,
                                 'Video: Stopped: ' + self.file_name + \
