@@ -25,6 +25,7 @@
 
 from time import sleep, strftime
 from datetime import datetime
+from datetime import timedelta
 import RPi.GPIO as io
 io.setmode(io.BCM)
 import syslog
@@ -170,8 +171,9 @@ class LisardEyeCore:
         if self.args.fullcam:
             self.args.nocam = True
             hscount = 1200
+            videostime = datetime.now()
             self.long_date_stamp = \
-                    datetime.now().strftime('%Y-%m-%d-%H%M%S')
+                    videostime.strftime('%Y-%m-%d-%H%M%S')
             self.file_name = self.long_date_stamp + '-' + \
                     socket.gethostname() + '.h264'
             self.cam.start_cam(self.file_name)
@@ -194,13 +196,17 @@ class LisardEyeCore:
 
             if io.input(self.pir_pin):
                 if not self.is_motion:
-                    # Start recording:
+                    # Start motion event:
+                    motionstime = datetime.now()
                     syslog.syslog(syslog.LOG_INFO, 'PIR: Motion detected')
                     self.is_motion = True
+
+                    # Start recording
                     if not self.args.nocam:
                         hscount = 1200
+                        videostime = datetime.now()
                         self.long_date_stamp = \
-                                datetime.now().strftime('%Y-%m-%d-%H%M%S')
+                                videostime.strftime('%Y-%m-%d-%H%M%S')
                         self.file_name = self.long_date_stamp + '-' + \
                                 socket.gethostname() + '.h264'
                         self.cam.start_cam(self.file_name)
@@ -210,25 +216,47 @@ class LisardEyeCore:
                     # Split recording every 20 minutes:
                     if not self.args.nocam:
                         if hscount == 0:
+                            # Get end time:
+                            videoetime = datetime.now()
+                            vllist = str(videoetime - videostime).split(':')
+                            vlength = vllist[1] + ':' + vllist[2].split('.')[0]
+                            syslog.syslog(syslog.LOG_INFO,
+                                    'Video: Split: ' + self.file_name + \
+                                            ' length: ' vlength)
+                            # Start new video:
                             self.long_date_stamp = \
-                                    datetime.now().strftime('%Y-%m-%d-%H%M%S')
+                                    videoetime.strftime('%Y-%m-%d-%H%M%S')
                             self.file_name = self.long_date_stamp + '-' + \
                                     socket.gethostname() + '.h264'
                             self.cam.split_cam(self.file_name)
                             syslog.syslog(syslog.LOG_INFO,
-                                    'Video: Split: ' + self.file_name)
+                                    'Video: Cont: ' + self.file_name))
                             hscount = 1200
                         else:
                             hscount = hscount - 1
 
             else:
                 if self.is_motion:
-                    # Stop recording:
-                    syslog.syslog(syslog.LOG_INFO, 'PIR: Motion stopped')
+                    # End motion event:
+                        motionetime = datetime.now()
+                        mllist = str(motionetime - motionstime).split(':')
+                        mlength = mllist[1] + ':' + mllist[2].split('.')[0]
+                    syslog.syslog(syslog.LOG_INFO, 'PIR: Motion stopped ' + \
+                            'length: ' + mlength)
+
+                    # Stop recording
                     if not self.args.nocam:
+                        # Get end time:
+                        videoetime = datetime.now()
+                        vllist = str(videoetime - videostime).split(':')
+                        vlength = vllist[1] + ':' + vllist[2].split('.')[0]
+                        syslog.syslog(syslog.LOG_INFO,
+                                'Video: Split: ' + self.file_name + \
+                                        'length: ' vlength)
                         self.cam.stop_cam()
                         syslog.syslog(syslog.LOG_INFO,
-                                'Video: Stopped: ' + self.file_name)
+                                'Video: Stopped: ' + self.file_name + \
+                                        ' length: ' + vlength)
                     self.is_motion = False
             sleep(0.5)
 
