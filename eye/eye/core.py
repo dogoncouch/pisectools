@@ -91,6 +91,8 @@ class LisardEyeCore:
             self.cam = cam.LisardCam()
             self.videostime = None
             self.videoetime = None
+            self.motionstime = None
+            self.motionetime = None
             self.is_recording = False
             self.long_date_stamp = ''
             self.video_path = '/home/pi/Videos' # To Do: get from args
@@ -193,7 +195,7 @@ class LisardEyeCore:
             if self.args.fullcam:
                 if hscount == 0:
                     # Get end time:
-                    selfvideoetime = datetime.now()
+                    self.videoetime = datetime.now()
                     vllist = str(self.videoetime - \
                             self.videostime).split(':')
                     vlength = vllist[1] + ':' + vllist[2].split('.')[0]
@@ -201,6 +203,7 @@ class LisardEyeCore:
                             'Video: Split file: ' + self.file_name + \
                                     ' length: ' + vlength)
                     # Start new video:
+                    self.videostime = self.videoetime
                     self.long_date_stamp = \
                             self.videoetime.strftime('%Y-%m-%d-%H%M%S')
                     self.file_name = self.long_date_stamp + '-' + \
@@ -243,6 +246,7 @@ class LisardEyeCore:
                                     'Video: Split file: ' + self.file_name + \
                                             ' length: ' + vlength)
                             # Start new video:
+                            self.videostime = self.videoetime
                             self.long_date_stamp = \
                                     self.videoetime.strftime(
                                             '%Y-%m-%d-%H%M%S')
