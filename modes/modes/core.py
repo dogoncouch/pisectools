@@ -220,7 +220,8 @@ class ModesCore:
             # Wifi mode:
             if io.input(self.wifi_pin):
                 if not self.is_wifi:
-                    subprocess.Popen(['/home/pi/bin/wifi.sh'])
+                    subprocess.Popen(
+                            ['/home/pi/src/lisard/scripts/wifi.sh'])
                     self.is_wifi = True
 
 
