@@ -37,9 +37,7 @@ git clone https://github.com/dogoncouch/dirutils.git
 cd dirutils
 sudo make
 cd ..
-git clone https://github.com/dogoncouch/dev-shortcuts.git
-sudo cp dev-shortcuts/gitup.sh /usr/local/bin/gitup
-sudo rm -rf logshell dirutils dev-shortcuts
+sudo rm -rf logshell dirutils
 cp config/bashrc /home/pi/.bashrc
 cp config/vimrc /home/pi/.vimrc
 cp config/profile /home/pi/.profile
