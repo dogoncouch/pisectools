@@ -47,7 +47,7 @@ class SystemUsageLogger:
 
             gputmp = os.popen(
                     '/opt/vc/bin/vcgencme measure_temp').readline().split(
-                            '=')[1])
+                            '=')[1]
 
             msg = 'System usage: %CPU: ' + cpu + + ' %Mem: ' +  mem + \
                     ' CPUTemp: ' + cputmp + ' GPUTemp: ' + gputmp
