@@ -47,7 +47,7 @@ class SystemUsageLogger:
             cputmp = "%.1f'C" % cputmpraw
 
             gputmp = os.popen(
-                    '/opt/vc/bin/vcgencme measure_temp').read().split(
+                    '/opt/vc/bin/vcgencmd measure_temp').read().split(
                             '=')[1]
 
             msg = 'System usage: %CPU: ' + cpu + + ' %Mem: ' +  mem + \
