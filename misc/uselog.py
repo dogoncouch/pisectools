@@ -32,10 +32,10 @@ class SystemUsageLogger:
 
     def __init__(self):
 
-        syslog.openlog(facility=syslog.LOG_LOCAL3)
+        syslog.openlog(facility=syslog.LOG_LOCAL1)
 
 
-    def do_watch(self, minutes=10):
+    def do_watch(self, minutes=20):
 
         msg = 'System usage: %CPU: ' + psutil.cpu_percent() + \
                 ' %Mem: ' +  psutil.virtual_memory()[2]
