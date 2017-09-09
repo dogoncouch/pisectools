@@ -50,7 +50,7 @@ class SystemUsageLogger:
                     '/opt/vc/bin/vcgencmd measure_temp').read().split(
                             '=')[1]
 
-            msg = 'System usage: %CPU: ' + cpu + + ' %Mem: ' +  mem + \
+            msg = 'System usage: %CPU: ' + cpu + ' %Mem: ' +  mem + \
                     ' CPUTemp: ' + cputmp + ' GPUTemp: ' + gputmp
         
             syslog.syslog(syslog.LOG_INFO, msg)
