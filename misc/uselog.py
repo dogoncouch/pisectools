@@ -45,8 +45,8 @@ class SystemUsageLogger:
                 cputmpraw = float(f.read()) / 1000
             cputmp = "%.1f'C" % cputmpraw
 
-            msg = 'System usage: %CPU: ' + cpu + ' %Mem: ' +  mem + \
-                    ' CPUTemp: ' + cputmp
+            msg = 'System usage: CPU: ' + cpu + '% Mem: ' +  mem + \
+                    '% CPUTemp: ' + cputmp
         
             syslog.syslog(syslog.LOG_INFO, msg)
         
