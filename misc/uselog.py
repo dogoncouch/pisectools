@@ -40,8 +40,17 @@ class SystemUsageLogger:
         while True:
             cpu = str(psutil.cpu_percent())
             mem = str(psutil.virtual_memory()[2])
-        
-            msg = 'System usage: %CPU: ' + cpu + ' %Mem: ' +  mem
+
+            with open('/sys/class/thermal/thermal_zone0/temp', 'r') as f:
+                cputmpraw = float(f.read()) / 1000
+            cputmp = "%.1f'C" % cputmpraw
+
+            gputmp = os.popen(
+                    '/opt/vc/bin/vcgencme measure_temp').readline().split(
+                            '=')[1])
+
+            msg = 'System usage: %CPU: ' + cpu + + ' %Mem: ' +  mem + \
+                    ' CPUTemp: ' + cputmp + ' GPUTemp: ' + gputmp
         
             syslog.syslog(syslog.LOG_INFO, msg)
         
