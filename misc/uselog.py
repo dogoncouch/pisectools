@@ -26,6 +26,7 @@
 import psutil
 from time import sleep
 import syslog
+import os
 
 
 class SystemUsageLogger:
