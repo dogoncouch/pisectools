@@ -38,7 +38,7 @@ class SystemUsageLogger:
     def do_watch(self, minutes=20):
 
         msg = 'System usage: %CPU: ' + psutil.cpu_percent() + \
-                ' %Mem: ' +  psutil.virtual_memory()[2]
+                ' %Mem: ' +  str(psutil.virtual_memory()[2])
 
         syslog.syslog(syslog.LOG_INFO, msg)
 
