@@ -26,7 +26,6 @@
 import psutil
 from time import sleep
 import syslog
-import os
 
 
 class SystemUsageLogger:
@@ -46,12 +45,8 @@ class SystemUsageLogger:
                 cputmpraw = float(f.read()) / 1000
             cputmp = "%.1f'C" % cputmpraw
 
-            gputmp = os.popen(
-                    '/opt/vc/bin/vcgencmd measure_temp').read().split(
-                            '=')[1]
-
             msg = 'System usage: %CPU: ' + cpu + ' %Mem: ' +  mem + \
-                    ' CPUTemp: ' + cputmp + ' GPUTemp: ' + gputmp
+                    ' CPUTemp: ' + cputmp
         
             syslog.syslog(syslog.LOG_INFO, msg)
         
