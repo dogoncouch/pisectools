@@ -35,16 +35,17 @@ class SystemUsageLogger:
         syslog.openlog(facility=syslog.LOG_LOCAL1)
 
 
-    def do_watch(self, minutes=20):
+    def do_watch(self, interval=20):
 
-        cpu = str(psutil.cpu_percent())
-        mem = str(psutil.virtual_memory()[2])
-
-        msg = 'System usage: %CPU: ' + cpu + ' %Mem: ' +  mem
-
-        syslog.syslog(syslog.LOG_INFO, msg)
-
-        sleep(minutes * 60)
+        while True:
+            cpu = str(psutil.cpu_percent())
+            mem = str(psutil.virtual_memory()[2])
+        
+            msg = 'System usage: %CPU: ' + cpu + ' %Mem: ' +  mem
+        
+            syslog.syslog(syslog.LOG_INFO, msg)
+        
+            sleep(interval * 60)
 
 
 
