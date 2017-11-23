@@ -14,6 +14,7 @@ Each has its own README.md.
 
 ### Scripts
 * [Raspberry Pi setup scripts](setup-scripts/)
-* [Miscellany](scripts/)
+* [Other useful scripts](scripts/)
+* [Miscellany](misc/)
 
 (c) 2017 Dan Persons ([dpersonsdev@gmail.com](mailto:dpersonsdev@gmail.com))
