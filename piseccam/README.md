@@ -19,20 +19,23 @@ Remote recording setup:
     cam.is_remote = True
     cam.open_connect(REMOTEHOST[, user=USERNAME, keyfile=KEYFILE, trustkeys=True])
 
-Disable remote recording
+Disable remote recording:
+
     cam.is_remote = False
     cam.close_connect()
 
-Start/split/stop recording
+Start/split/stop recording:
 
     cam.start_cam(FILENAME)
     cam.split_cam(FILENAME)
     cam.stop_cam()
 
 Cycle through effects:
+
     cam.cycle_effects()
 
 Change camera rotation:
+
     cam.camera.rotation = 90 | 180 | 270
 
 
