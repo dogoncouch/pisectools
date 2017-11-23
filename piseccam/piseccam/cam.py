@@ -106,7 +106,7 @@ class PiSecCam:
     
 
 
-    def time_stamp(self):
+    def _time_stamp(self):
         """Keep pi camera timestamp updated"""
         while self.is_recording:
             datestamp = datetime.now().strftime('%Y-%m-%d-%H:%M')
@@ -126,7 +126,7 @@ class PiSecCam:
             f = fullname
         if self.annotate:
             tstamp = threading.Thread(name='background',
-                    target=self.time_stamp)
+                    target=self._time_stamp)
             tstamp.daemon = True
             tstamp.start()
         self.camera.start_recording(f, format='h264')
