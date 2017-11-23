@@ -1,5 +1,5 @@
 # Change log
-Change log for [lisard](https://github.com/dogoncouch/lisard)
+Change log for [pisectools](https://github.com/dogoncouch/pisectools)
 
 ## [Unreleased]
 ### Added

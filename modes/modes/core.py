@@ -31,7 +31,6 @@ import subprocess
 import argparse
 import RPi.GPIO as io
 io.setmode(io.BCM)
-# import lisard
 # from picamera import PiCamera, Color
 
 
@@ -72,9 +71,9 @@ class ModesCore:
         
         # Video recording mode setup:
         if not self.args.nocam:
-            import lisard
+            from piseccam import cam
 
-            self.cam = lisard.LisardCam()
+            self.cam = cam.PiSecCam()
             self.is_recording = False
             self.longdatestamp = ''
             self.videopath = '/home/pi/Videos'
@@ -221,7 +220,7 @@ class ModesCore:
             if io.input(self.wifi_pin):
                 if not self.is_wifi:
                     subprocess.Popen(
-                            ['/home/pi/src/lisard/scripts/wifi.sh'])
+                            ['/home/pi/src/pisectools/scripts/wifi.sh'])
                     self.is_wifi = True
 
 

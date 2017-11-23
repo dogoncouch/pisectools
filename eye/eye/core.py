@@ -33,15 +33,14 @@ import argparse
 import signal
 from sys import exit
 import socket
-# import lisard
 # from picamera import PiCamera, Color
 
 
 
-class LisardEyeCore:
+class PiSecEyeCore:
     
     def __init__(self):
-        """Initialize LISARD eye system"""
+        """Initialize Pi sec tools eye system"""
 
         # Open our log:
         syslog.openlog(facility=syslog.LOG_LOCAL2)
@@ -86,9 +85,9 @@ class LisardEyeCore:
 
         # Video recording mode setup:
         if not self.args.nocam:
-            from lisard import cam
+            from piseccam import cam
             
-            self.cam = cam.LisardCam()
+            self.cam = cam.PiSecCam()
             self.videostime = None
             self.videoetime = None
             self.motionstime = None
@@ -149,7 +148,7 @@ class LisardEyeCore:
 
     def do_run(self):
         """Runs the watch job"""
-        syslog.syslog(syslog.LOG_NOTICE, 'LISARD eye online.')
+        syslog.syslog(syslog.LOG_NOTICE, 'Pi security eye online.')
         try:
             self.do_watch()
         # except KeyboardInterrupt:
@@ -286,9 +285,9 @@ class LisardEyeCore:
 
 
 def main():
-    sentry = LisardEyeCore()
+    sentry = PiSecEyeCore()
     sentry.do_run()
 
 if __name__ == "__main__":
-    sentry = LisardEyeCore()
+    sentry = PiSecEyeCore()
     sentry.do_run()

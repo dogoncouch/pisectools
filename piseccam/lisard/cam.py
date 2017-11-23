@@ -32,10 +32,10 @@ import signal
 from sys import exit
 
 
-class LisardCam:
+class PiSecCam:
     
     def __init__(self):
-        """Initialize a LisardCam pi camera object"""
+        """Initialize a PiSecCam pi camera object"""
         self.camera = PiCamera()
         self.set_res('fhd')
         self.annotate = True
@@ -45,7 +45,7 @@ class LisardCam:
         self.is_remote = False
         self.sftp = None
         self.key_file = '/home/pi/.ssh/id_rsa'
-        self.output_dir = '/home/lisard/Videos'
+        self.output_dir = '/home/pisectools/Videos'
 
         signal.signal(signal.SIGTERM, self.sigterm_handler)
 
@@ -83,7 +83,7 @@ class LisardCam:
 
     
     
-    def open_connect(self, rhost, user='lisard', keyfile='/home/pi/.ssh/id_rsa',
+    def open_connect(self, rhost, user='pisectools', keyfile='/home/pi/.ssh/id_rsa',
             hostfile='/home/pi/.ssh/known_hosts', trustkeys=False):
         """Open an sftp connection for recording"""
         try:
@@ -159,9 +159,9 @@ class LisardCam:
     
 
 def main():
-    cam = LisardCam()
+    cam = PiSecCam()
     cam.start_cam()
 
 if __name__ == "__main__":
-    cam = LisardCam()
+    cam = PiSecCam()
     cam.start_cam()
