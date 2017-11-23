@@ -38,5 +38,6 @@ Change camera rotation:
 
     cam.camera.rotation = 90 | 180 | 270
 
+Note: PiCamera object can be accessed directly via `cam.camera`.
 
 (c) 2017 Dan Persons ([dpersonsdev@gmail.com](mailto:dpersonsdev@gmail.com))
