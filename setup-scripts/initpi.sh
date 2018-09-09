@@ -27,7 +27,7 @@
 
 sudo apt-get update
 sudo apt-get upgrade -y
-sudo apt-get install -y vim vim-scripts screen lynx links python-paramiko
+sudo apt-get install -y vim vim-scripts screen lynx links python-paramiko python-pip python3-pip
 sudo pip install logdissect
 git clone https://github.com/dogoncouch/logshell.git
 cd logshell
@@ -41,4 +41,5 @@ sudo rm -rf logshell dirutils
 cp config/bashrc /home/pi/.bashrc
 cp config/vimrc /home/pi/.vimrc
 cp config/profile /home/pi/.profile
+mkdir /home/pi/.config
 cp config/logshell.conf /home/pi/.config/logshell.conf
