@@ -265,8 +265,8 @@ class PiSecEyeCore:
                     mllist = str(self.motionetime - \
                             self.motionstime).split(':')
                     mlength = mllist[1] + ':' + mllist[2].split('.')[0]
-                    syslog.syslog(syslog.LOG_INFO, 'PIR: Motion stopped ' + \
-                            'length: ' + mlength)
+                    syslog.syslog(syslog.LOG_INFO, 'PIR: Motion stopped. ' + \
+                            'Length: ' + mlength)
 
                     # Stop recording
                     if not self.args.nocam:
